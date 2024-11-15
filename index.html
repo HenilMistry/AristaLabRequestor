@@ -14,6 +14,7 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-primary" onclick="selectTool('Node')">Node</button>
                 <button type="button" class="btn btn-primary" onclick="selectTool('Connection')">Connection</button>
+                <button type="button" class="btn btn-primary" onclick="GenerateCode()">Generate Code</button>
                 <div class="alert alert-primary" role="alert" id="label_info"> Select some tool to get started! </div>
             </div>
         </div>
@@ -150,7 +151,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- All Utilities Here -->
      <script src="./Asset/Scripts/Utilities/NodeDut.js"></script>
-     <script src="./Asset/Scripts/Utilities/NodeIxis.js"></script>
+     <script src="./Asset/Scripts/Utilities/NodeIxia.js"></script>
      <script src="./Asset/Scripts/Utilities/Port.js"></script>
 
     <!-- All Tool Helper -->
@@ -159,7 +160,9 @@
     <script src="./Asset/Scripts/ToolHelper/portConfigManager.js"></script>
 
     <!-- All GuiHelpers -->
-    <script src="./Asset/Scripts/GuiHelpers/NodeHelper.js"></script> 
+    <script src="./Asset/Scripts/GuiHelpers/NodeHelper.js"></script>
+    <script src="./Asset/Scripts/GuiHelpers/ConnectionHelper.js"></script> 
 
     <script src="./Asset/main.js"></script>
+    <scripts src="./Asset/Scripts/codeGeneratorScript.js"></script>
 </html>
