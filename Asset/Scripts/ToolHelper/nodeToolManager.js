@@ -39,17 +39,24 @@ function configureNode() {
         NodeIxia.push(newIxiaNode);
         ports = [];
 
-    } else { // collect the data and store DUT Node...
-        let newDut;
-        if(chk_enableMoveTo.checked) {
-            newDut = new Dut(newAlias, newLocation, field_moveTo.value);
-        } else {
-            newDut = new Dut(newAlias, newLocation, Dut.NO_MOVETO);
-        }
-        NodeDut.push(newDut);
-    }
+        let newNode = new Node(newAlias, lastX, lastY, 20, "Red", c);
+        newNode.NodeProperties = newIxiaNode;
+        Nodes.push(newNode);
 
-    Nodes.push(new Node(newAlias, lastX, lastY, 20, "Red", c));
+    } else { // collect the data and store DUT Node...
+        let newDutNode;
+        if(chk_enableMoveTo.checked) {
+            newDutNode = new Dut(newAlias, newLocation, field_moveTo.value);
+        } else {
+            newDutNode = new Dut(newAlias, newLocation, Dut.NO_MOVETO);
+        }
+        NodeDut.push(newDutNode);
+        ports = [];
+
+        let newNode = new Node(newAlias, lastX, lastY, 20, "Red", c);
+        newNode.NodeProperties = newDutNode;
+        Nodes.push(newNode);
+    }
     closeNodeConfig();
 }
 
