@@ -9,13 +9,6 @@ const mouse = {
     y: innerHeight/2 
 };
 
-const chk_enableMoveTo = document.getElementById("enableMoveTo");
-const field_moveTo = document.getElementById("moveTo");
-
-chk_enableMoveTo.addEventListener("click",(e) => {
-    field_moveTo.disabled = !chk_enableMoveTo.checked;
-});
-
 // What to do when window is resized 
 addEventListener("resize", () => {
     canvas.width = innerWidth;
@@ -34,15 +27,16 @@ addEventListener("mousemove",(e)=>{
   
 // What to do when mouse is clicked...
 addEventListener("click",(e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
     if (ActiveTool == Tools.NODE) {
        if (NodeToolActivated != 1) {
-        Nodes.push(new Node(Nodes.length, mouse.x, mouse.y, 20, "Red", c));
+        lastX = e.clientX;
+        lastY = e.clientY;
         ActiveTool = null;
         openNodeConfig();
        }
        NodeToolActivated = 0;
+    } else if (ActiveTool == Tools.CONNECTION) {
+
     }
 });  
 
@@ -50,12 +44,19 @@ let Nodes, Connections;
 let NodeToolActivated = 0;
 let ports;
 let PORT_ID = 0;
+let click = 0;
+let firstNode = -1;
+let secondNode = null;
+
+let NodeIxia, NodeDut;
 
 // something to be done initially, put here...
 function init() {
     Nodes = [];
     Connections = [];
     ports = [];
+    NodeIxia = [];
+    NodeDut = [];
 }
 
 // Animation Loop
@@ -70,3 +71,12 @@ function animationLoop() {
 
 init();
 animationLoop();
+
+
+// To calculate the distance between two points in 2D Plane
+function distance(x1, y1, x2, y2) {
+    const xDist = x2 - x1;
+    const yDist = y2 - y1;
+  
+    return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+}
