@@ -33,4 +33,40 @@ class Node {
     paint(fillColor) {
         this.animate(fillColor);
     }
+
+    getNodePortableLocation() {
+        // example : cmp257 - dm1-rack118-tb10
+        return this.NodeProperties.alias + " - " + this.NodeProperties.location;
+    }
+
+    getNodeMovement() {
+        // only applicable to DUTs
+        // example : sdm454 - MOVE TO dm1-rack111-tb31
+        // example : gla358 - DO NOT MOVE
+        if (this.NodeProperties instanceof Dut) {
+            if (this.NodeProperties.movement == Dut.NO_MOVETO) {
+                return this.NodeProperties.alias + " - " + this.NodeProperties.movement;
+            } else {
+                return this.NodeProperties.alias + " - MOVE TO " + this.NodeProperties.movement;
+            }
+        } else {
+            return "";
+        }
+    }
+
+    getIxiaPorts() {
+        // example : dm1-rack107-ixia1 - Port 5/5 (100G)
+        if (this.NodeProperties instanceof Ixia) {
+            let finalString = "";
+            // for(let port in this.NodeProperties.ports) {
+                
+            // }
+            this.NodeProperties.ports.forEach((port) => {
+                finalString += this.NodeProperties.location + " - " + port.identifier + " (" + port.speed + ")\n";
+            });
+            return finalString;
+        } else {
+            return "";
+        }
+    }
 }
