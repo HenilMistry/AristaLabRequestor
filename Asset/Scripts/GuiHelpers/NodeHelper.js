@@ -7,6 +7,7 @@ class Node {
         this.radius = radius;
         this.color = color;
         this.c = context;
+        this.NodeProperties;
     }
     
     draw() {
