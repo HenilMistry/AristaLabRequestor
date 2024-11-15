@@ -1,0 +1,11 @@
+.group {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+canvas {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
