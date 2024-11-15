@@ -1,4 +1,4 @@
-const NO_MOVETO = "NO MOVEMENT";
+const NO_MOVETO = "DO NOT MOVE";
 class Dut {
     constructor(alias, location, movement) {
         this.alias = alias;
