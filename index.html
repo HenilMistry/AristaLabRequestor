@@ -14,7 +14,7 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-primary" onclick="selectTool('Node')">Node</button>
                 <button type="button" class="btn btn-primary" onclick="selectTool('Connection')">Connection</button>
-                <button type="button" class="btn btn-primary" onclick="GenerateCode()">Generate Code</button>
+                <button type="button" class="btn btn-primary" onclick="GenerateCode()">Generate Descriprion / Script</button>
                 <div class="alert alert-primary" role="alert" id="label_info"> Select some tool to get started! </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Port Selection Modal -->
-        <div class="modal fade" id="portSelectionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="portSelectionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -114,15 +114,27 @@
                 <div class="modal-body">
                   <form>
                     
-                    <label for="nodeType" class="form-label">Select Port</label>
-                    <select class="form-select" id="portList">
-                        
-                    </select>
+                    <div id="portSelectionIxia">
+                        <label for="portList" class="form-label">Select Port</label>
+                        <select class="form-select" id="portList">
+                            
+                        </select>
+                    </div>
+
+                    <div class="mb-3" id="portSelectionDut">
+                        <label for="portIdentifierDut" class="form-label">Port Identifier</label>
+                        <input type="text" class="form-control" id="portIdentifierDut">
+                    </div>
+
+                    <div class="mb-3" id="portSpeedSelectionDut">
+                        <label for="portSpeedDut" class="form-label">Port Speed</label>
+                        <input type="text" class="form-control" id="portSpeedDut">
+                    </div>
 
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="portSelectionBtn" onclick="">Configure Port</button>
+                  <button type="button" class="btn btn-primary" id="portSelectionBtn" onclick="configurePortSelection()">Configure Connection</button>
                 </div>
               </div>
             </div>
@@ -158,11 +170,12 @@
     <script src="./Asset/Scripts/ToolHelper/toolManager.js"></script>
     <script src="./Asset/Scripts/ToolHelper/nodeToolManager.js"></script>
     <script src="./Asset/Scripts/ToolHelper/portConfigManager.js"></script>
+    <script src="./Asset/Scripts/ToolHelper/portSelectionManager.js"></script>
 
     <!-- All GuiHelpers -->
     <script src="./Asset/Scripts/GuiHelpers/NodeHelper.js"></script>
     <script src="./Asset/Scripts/GuiHelpers/ConnectionHelper.js"></script> 
 
-    <script src="./Asset/main.js"></script>
     <scripts src="./Asset/Scripts/codeGeneratorScript.js"></script>
+    <script src="./Asset/main.js"></script>
 </html>
