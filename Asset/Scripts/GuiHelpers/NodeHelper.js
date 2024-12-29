@@ -45,26 +45,10 @@ class Node {
         // example : gla358 - DO NOT MOVE
         if (this.NodeProperties instanceof Dut) {
             if (this.NodeProperties.movement == Dut.NO_MOVETO) {
-                return this.NodeProperties.alias + " - " + this.NodeProperties.movement;
+                return this.NodeProperties.alias + " - " + this.NodeProperties.movement+"\n";
             } else {
-                return this.NodeProperties.alias + " - MOVE TO " + this.NodeProperties.movement;
+                return this.NodeProperties.alias + " - MOVE TO " + this.NodeProperties.movement+"\n";
             }
-        } else {
-            return "";
-        }
-    }
-
-    getIxiaPorts() {
-        // example : dm1-rack107-ixia1 - Port 5/5 (100G)
-        if (this.NodeProperties instanceof Ixia) {
-            let finalString = "";
-            // for(let port in this.NodeProperties.ports) {
-                
-            // }
-            this.NodeProperties.ports.forEach((port) => {
-                finalString += this.NodeProperties.location + " - " + port.identifier + " (" + port.speed + ")\n";
-            });
-            return finalString;
         } else {
             return "";
         }
