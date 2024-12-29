@@ -15,8 +15,6 @@ let ports;
 let PORT_ID = 0;
 let click = 0;
 let firstNode = -1;
-let ixiaPort = null;
-let dutPort = null;
 let isIxiaNode = false;
 let secondNode = null;
 
@@ -33,8 +31,6 @@ function init() {
     secondNode = null;
     PORT_ID = 0;
     click = 0;
-    dutPort = [];
-    ixiaPort = null;
 }
 
 // Animation Loop
@@ -111,18 +107,15 @@ addEventListener("click",(e) => {
                 if(click%2==0) {
                   // it means it's a second click..
                   secondNode = node;
-                  openPortSelectionModal();
+                  openconnectionsConfigurationModal();
                 } else {
                   firstNode = node;
-                //   if (firstNode.NodeProperties instanceof Ixia) {
-                //     isIxiaNode = true;
-                //   }
-                  openPortSelectionModal();
                 }
               }
             });
         } else {
-            alert("No nodes are on the Canvas!");
+            selectTool(null);
+            openAlertModal("Alert!", "No nodes on the canvas!");
         }
     }
 });
@@ -140,41 +133,46 @@ function distance(x1, y1, x2, y2) {
 }
 
 function GenerateCode() {
-    let output = "";
+    if (Nodes.length == 0) { // If there are no nodes on the canvas...
+        openAlertModal("Alert!","No nodes on the canvas!");
+    } else if (Connections.length == 0) { // If there is no connections on the canvas...
+        openAlertModal("Alert!","No connections are made! Please add some!");
+    } else {
+        let output = "";
 
-    output += "Probable location of the DUTS\n=============================\n\n";
-    Nodes.forEach((node) => {
-        if(node.NodeProperties instanceof Dut) {
-            output += node.getNodePortableLocation()+"\n";
-        }
-    });
-    output += "\n\n";
+        output += "Probable location of the DUTS\n=============================\n";
+        Nodes.forEach((node) => {
+            if(node.NodeProperties instanceof Dut) {
+                output += node.getNodePortableLocation()+"\n";
+            }
+        });
+        output += "\n\n";
 
-    output += "MOVE DUTS\n=============\n\n";
-    Nodes.forEach((node) => {
-        if(node.NodeProperties instanceof Dut) {
-            output += node.getNodeMovement();
-        }
-    });
-    output += "\n\n";
+        output += "MOVE DUTS\n=============\n";
+        Nodes.forEach((node) => {
+            if(node.NodeProperties instanceof Dut) {
+                output += node.getNodeMovement();
+            }
+        });
+        output += "\n\n";
 
-    output += "IXIA Ports Reserved\n==========================\n\n";
-    Nodes.forEach((node) => {
-        if(node.NodeProperties instanceof Ixia) {
-            output += node.getIxiaPorts();
-        }
-    });
-    output += "\n\n";
+        output += "IXIA Ports Reserved\n==========================\n";
+        Connections.forEach((connection) => {
+            console.log(connection);
+            output += connection.connectionProperties.getIxiaPorts()+"\n";
+        });
+        output += "\n\n";
 
-    output += "REMOVE CONNECTIONS\n=====================\n\n**** REMOVE ALL EXISTING CONNECTIONS on above mentioned DUTs and IXIA ports ****\n\n";
+        output += "REMOVE CONNECTIONS\n=====================\n**** REMOVE ALL EXISTING CONNECTIONS on above mentioned DUTs and IXIA ports ****\n\n";
 
-    output += "DUT-IXIA Connections:\n========================\n\n";
-    output += ConnectionHelper.getDutToIxiaConnections();
-    output += "\n\n";
+        output += "DUT-IXIA Connections:\n========================\n";
+        output += ConnectionHelper.getDutToIxiaConnections();
+        output += "\n\n";
 
-    output += "DUT-DUT Connections:\n========================\n\n";
-    output += ConnectionHelper.getDutToDutConnections();
-    output += "\n\n";
+        output += "DUT-DUT Connections:\n========================\n";
+        output += ConnectionHelper.getDutToDutConnections();
+        output += "\n\n";
 
-    console.log(output);
+        console.log(output);
+    }
 }
