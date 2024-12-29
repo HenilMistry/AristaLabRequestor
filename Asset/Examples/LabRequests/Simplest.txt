@@ -1,0 +1,40 @@
+Hi Lab team,
+Need the below mentioned connections for Provide ACL summary for all security ACLs
+
+Reserved in labtracker
+=================
+DUT(s)                      Yes
+Ixia Ports                  Yes
+
+DUTS
+=====
+bim260 - dm1-rack119-tb42
+
+Ixia Ports to be used
+=================================  
+dm1-rack107-ixia1          ---        slot 3/port 4
+dm1-rack107-ixia1          ---        slot 3/port 6
+dm1-rack107-ixia1          ---        slot 3/port 7
+dm1-rack107-ixia1          ---        slot 3/port 8
+
+DUTs to be moved
+===============
+1. Move bim260 to rack106-tb44 (1RU)
+(If the above location is already used, please rack it wherever the below connections can be made)
+
+Older connections to be removed
+=================================
+bim260 ---        Remove all existing connections, if any
+dm1-rack107-ixia1          ---         Remove all existing connections, if any 
+dm1-rack107-ixia1          ---         Remove all existing connections, if any
+dm1-rack107-ixia1          ---        Remove all existing connections, if any
+dm1-rack107-ixia1          ---        Remove all existing connections, if any
+
+IXIA-DUT CONNECTIONS
+=====================
+1G
+====
+dm1-rack107-ixia1  Port 3/4 (1G) -------------------- bim260 Et1 (1G)
+dm1-rack107-ixia1  Port 3/6 (1G) -------------------- bim260 Et2 (1G)
+dm1-rack107-ixia1  Port 3/7 (1G) -------------------- bim260 Et3 (1G)
+dm1-rack107-ixia1  Port 3/8 (1G) -------------------- bim260 Et4 (1G)

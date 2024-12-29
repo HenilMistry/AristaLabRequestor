@@ -26,37 +26,30 @@ function closeNodeConfig() {
 function configureNode() {
     let newAlias = field_nodeAlias.value;
     let newLocation = field_location.value;
+    let newIxiaNode, newDutNode, newNode;
+    let isTypeIxia = false;
 
     // Check if type is ixia and no ports are configured ?...
     if(select_nodeType.value == "ixia") {
-        if(select_nodePorts.options.length == 0) {
-            alert("Configure at least one ixia port!");
-            return;
-        }
-        // collect the data and store ixia node...
-        let newPorts = ports; // defined in main.js ...
-        let newIxiaNode = new Ixia(newAlias, newLocation, newPorts);
+        newIxiaNode = new Ixia(newAlias, newLocation);
         NodeIxia.push(newIxiaNode);
-        ports = [];
-
-        let newNode = new Node(newAlias, lastX, lastY, 20, "Red", c);
-        newNode.NodeProperties = newIxiaNode;
-        Nodes.push(newNode);
-
+        isTypeIxia = true;
     } else { // collect the data and store DUT Node...
-        let newDutNode;
         if(chk_enableMoveTo.checked) {
             newDutNode = new Dut(newAlias, newLocation, field_moveTo.value);
         } else {
             newDutNode = new Dut(newAlias, newLocation, Dut.NO_MOVETO);
         }
         NodeDut.push(newDutNode);
-        ports = [];
-
-        let newNode = new Node(newAlias, lastX, lastY, 20, "Red", c);
-        newNode.NodeProperties = newDutNode;
-        Nodes.push(newNode);
     }
+
+    newNode = new Node(newAlias, lastX, lastY, 20, "Red", c);
+    if (isTypeIxia) {
+        newNode.NodeProperties = newIxiaNode;
+    } else {
+        newNode.NodeProperties = newDutNode;
+    }
+    Nodes.push(newNode);
     closeNodeConfig();
 }
 
