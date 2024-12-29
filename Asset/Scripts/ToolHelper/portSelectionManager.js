@@ -1,79 +1,171 @@
-const portSelectionModal = new bootstrap.Modal('#portSelectionModal');
-const select_portList = document.getElementById('portList');
-const field_Identifier = document.getElementById('portIdentifierDut');
-const field_Speed = document.getElementById('portSpeedDut');
+const connectionsConfigurationModal = new bootstrap.Modal('#connectionsConfigurationModal');
+const connectionsConfig_infoBox = document.getElementById('connectionsConfig_infoBox');
+const connectionsConfig_LblIdentifierA = document.getElementById('connectionsConfig_LblIdentifierA');
+const connectionsConfig_LblIdentifierB = document.getElementById('connectionsConfig_LblIdentifierB');
+const connectionsConfig_portIdentifierA = document.getElementById('connectionsConfig_portIdentifierA');
+const connectionsConfig_portIdentifierB = document.getElementById('connectionsConfig_portIdentifierB');
+const connectionsConfig_bandWidth = document.getElementById('connectionsConfig_bandWidth');
+const connectionsConfig_connections = document.getElementById('connectionsConfig_connections');
+let connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt'); // dyanmically change the visibility. So, using 'let' ...
 
-const field_for_dut = document.getElementById("portSelectionDut");
-const field_for_dut_speed = document.getElementById("portSpeedSelectionDut");
-const field_for_ixia = document.getElementById("portSelectionIxia");
+let editID = undefined;
 
-function openPortSelectionModal() {
-    portSelectionModal.show();
-    console.log(firstNode);
-        console.log(secondNode);
-    if (isIxiaNode) {
-        field_for_dut.style.display = "none";
-        field_for_dut_speed.style.display = "none";
-        field_for_ixia.style.display = "block";
+function openconnectionsConfigurationModal() {
+    connectionsConfigurationModal.show();
+    // Just for testing: Below two lines
+    // console.log(firstNode);
+    // console.log(secondNode);
 
-        let destinationPorts;
-        if(click %2 == 0) {
-            destinationPorts = secondNode.NodeProperties.ports;
-        } else {
-            destinationPorts = firstNode.NodeProperties.ports;
-        }
-        console.log(destinationPorts);
-
-        select_portList.innerHTML = "";
-        destinationPorts.forEach((port) => {
-            console.log(port);
-            console.log(port.toString());
-            var option = document.createElement('option');
-            option.value = port.id;
-            option.innerHTML = port.toString();
-            select_portList.appendChild(option);
-        });
-    } else {
-        field_for_dut.style.display = "block";
-        field_for_dut_speed.style.display = "block";
-        field_for_ixia.style.display = "none";
-    }
+    connectionsConfig_infoBox.innerText = "Configure connections between nodes : "+firstNode.NodeProperties.alias+" and "+secondNode.NodeProperties.alias+"";
+    connectionsConfig_LblIdentifierA.innerText = "Port Identifier for : "+firstNode.NodeProperties.alias;
+    connectionsConfig_LblIdentifierB.innerText = "Port Identifier for : "+secondNode.NodeProperties.alias;
 }
 
-function closePortSelectionModal() {
-    portSelectionModal.hide();
-    isIxiaNode = false;
-    if (click %2 == 0) {
-        let newConnection = new ConnectionHelper(firstNode, secondNode, c);
-        newConnection.DutPorts = dutPort;
-        newConnection.IxiaPort = ixiaPort;
+async function closeConnectionsConfigurationModal() {
+    if(ports.length == 0) {
+        let result = await openConfirmationModal("Are you sure?","No ports are configured in this connection. Are you sure you want to proceed ?");
+        if (!result) {
+            return;
+        }
+    }
 
-        Connections.push(newConnection);
+    connectionsConfigurationModal.hide();
+    if (click %2 == 0) {
         click = 0;
         firstNode = null;
         secondNode = null;
         isIxiaNode = false;
-        ixiaPort = null;
-        dutPort = [];
         ports = [];
     }
-    console.log(Connections);
+    // Just for debugging ...
+    // console.log(Connections);
 }
 
-function configurePortSelection() {
-    if(isIxiaNode) {
-        let selectedPort;
-        if(click %2 == 0) {
-            selectedPort = secondNode.NodeProperties.ports.filter(port => port.id == select_portList.value);
-        } else {
-            selectedPort = firstNode.NodeProperties.ports.filter(port => port.id == select_portList.value);
-        }
-        ixiaPort = selectedPort[0];
-    } else {
-        let newPort = new Port(PORT_ID,field_Identifier.value, field_Speed.value);
-        PORT_ID++;
-        ports.push(newPort);
-        dutPort.push(newPort);
+function configureConnection() {
+    // Below LOC will make sure that User configure at least one port ...
+    if(ports.length == 0) {
+        openAlertModal("Alert!","Please configure at least 1 Port in Connection!");
+        return;
     }
-    closePortSelectionModal();
+
+    // Below LOC will make sure that older connections will be removed ...
+    connectionsConfig_portIdentifierA.value = "";
+    connectionsConfig_portIdentifierB.value = "";
+    connectionsConfig_bandWidth.value = "";
+    connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
+    connectionsConfig_warningTxt.style.display = "block";
+    ports.forEach((port) => {
+        const DivInHTML = document.getElementById(port.getID());
+        DivInHTML.remove();
+    });
+
+    // Below LOC is Logical Part for connection ...
+    let connection = new ConnectionHelper(firstNode, secondNode, c, ports);
+    Connections.push(connection);
+    closeConnectionsConfigurationModal();
+}
+
+/**
+ * This function will add render port information on the screen...
+ * 
+ * Default Code Snippet: 
+ *  <div class="input-group mb-3">
+ *    <span class="input-group-text">Something-port===Something-port</span>
+ *    <button class="btn btn-outline-primary" type="button" id="connectionsConfig_edit">Edit</button>
+ *    <button class="btn btn-outline-primary" type="button" id="connectionsConfig_delete">Delete</button>
+ * </div>
+ */
+function addPortToConnection() {
+    // Below code controls the flow of either updation or addition of port information on the screen ...
+    if (editID != undefined && editID != null) {
+        // if editId is not null and not undefined 
+        // then execute below LOC ...
+        editPortInConnection(editID);
+        return;
+    }
+
+    // Below code controls the temp. storing of the ports for the current connection ...
+    ports.push(new Port(connectionsConfig_portIdentifierA.value, connectionsConfig_portIdentifierB.value, connectionsConfig_bandWidth.value));
+
+    // Below code controls the visibility of the warning text under Active Connections section ...
+    if (ports.length == 0) { // There are no ports then show the warning! ...
+        connectionsConfig_warningTxt.style.display = "block";
+    } else { // There are some ports then don't show the warning! ...
+        connectionsConfig_warningTxt.style.display = "none";
+    }
+
+    // Below code controls the rendering part for the newly added ports ...
+    connectionsConfig_connections.innerHTML += "<div class='input-group mb-3' id='"+ports[ports.length-1].getID()+"'> <span class='input-group-text'>"+firstNode.NodeProperties.alias+"-"+connectionsConfig_portIdentifierA.value+" === "+connectionsConfig_bandWidth.value+" === "+connectionsConfig_portIdentifierB.value+"-"+secondNode.NodeProperties.alias+"</span> <button class='btn btn-outline-primary' type='button' onclick='updatePortInConnection(\""+ports[ports.length-1].getID()+"\")'> Edit </button> <button class='btn btn-outline-secondary' type='button' onclick='deletePortFromConnection(\""+ports[ports.length-1].getID()+"\")'> Delete </button> </div>";
+}
+
+async function editPortInConnection(EditID) {
+    // Below code controls the flow of either updating or not updating the connection as per thr use choice ...
+    const result = await openConfirmationModal("Are you sure?","Do you really want to edit this connection?");
+    if (!result) {
+        return;
+    }
+
+    // Below code controls the updation of port in temp. storage from the current connection ...
+    ports.forEach((port)=>{
+        if (port.getID() == EditID) {
+            port.identifierA = connectionsConfig_portIdentifierA.value;
+            port.identifierB = connectionsConfig_portIdentifierB.value;
+            port.speed = connectionsConfig_bandWidth.value;
+        }
+    });
+
+    // Below code controls the rendering part for the updated port ...
+    let connectionsConfig_connection = document.getElementById(EditID);
+    connectionsConfig_connection.innerHTML="<span class='input-group-text'>"+firstNode.NodeProperties.alias+"-"+connectionsConfig_portIdentifierA.value+" === "+connectionsConfig_bandWidth.value+" === "+connectionsConfig_portIdentifierB.value+"-"+secondNode.NodeProperties.alias+"</span> <button class='btn btn-outline-primary' type='button' onclick='updatePortInConnection(\""+editID+"\")'> Edit </button> <button class='btn btn-outline-secondary' type='button' onclick='deletePortFromConnection(\""+editID+"\")'> Delete </button>";
+    editID = undefined;
+}
+
+function updatePortInConnection(DivID) {
+    // Below code controls the acknowledgement to the user to let them know ...
+    openAlertModal("Info!","Now you can edit the port and click on 'Add Port' to confirm!!");
+    editID = DivID;
+
+    // Below code controls the updation of fields in the port configuration ...
+    let portToEdit = null;
+    ports.forEach((port)=>{
+        if (port.getID()==DivID) {
+            portToEdit = port;
+        }
+    });
+    connectionsConfig_portIdentifierA.value = portToEdit.identifierA;
+    connectionsConfig_portIdentifierB.value = portToEdit.identifierB;
+    connectionsConfig_bandWidth.value = portToEdit.speed;
+}
+
+/**
+ * This function will remove port information from the screen ...
+ * 
+ * @param {*} DivID - The id from the object 'Port' for Div identification
+ */
+async function deletePortFromConnection(DivID) {
+    // Below code controls the flow of either deleting or not deleting the connection as per the user choice ...
+    const result = await openConfirmationModal("Are you sure?","Do you really want to delete this connection?");
+    if (!result) {
+        return;
+    }
+
+    // Below code controls the deletion of ports from temp. storage from the current connection ...
+    let index;
+    for(let i = 0; i < ports.length; i++) {
+        if (ports[i].getID()==DivID) {
+            index = i;
+            break;
+        }
+    }
+    ports.splice(index,1);
+
+    // Below code controls the visiblily of the warning text under the Active Connections section ...
+    if(ports.length==0) {
+        connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
+        connectionsConfig_warningTxt.style.display = "block";
+    }
+
+    // Below code controls the rendering part for the deleted port ...
+    const DivInHTML = document.getElementById(DivID);
+    DivInHTML.remove();
 }
