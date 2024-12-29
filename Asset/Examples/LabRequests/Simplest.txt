@@ -8,9 +8,7 @@ Ixia Ports                  Yes
 
 DUTS
 =====
-
 bim260 - dm1-rack119-tb42
-
 
 Ixia Ports to be used
 =================================  
