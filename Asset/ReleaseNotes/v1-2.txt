@@ -1,0 +1,14 @@
+LabRequestor 1.2
+========================================
+
+: Points addressed by DEV. :
+----------------------------------------
+- Closable and Cancellable Node Configuration Dialog Box
+- Alerts when necessary
+- Add Modern Alerts
+- When node tool is selected and clicked on Generate Script button
+- When there are no nodes, Connection tool is selected and clicked on Generate Script button
+
+: Points addressed by Users :
+----------------------------------------
+- New Connection Configuration Dialog Box
