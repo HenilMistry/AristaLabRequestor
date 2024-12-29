@@ -1,11 +1,8 @@
 class ConnectionHelper {
-    constructor(nodeA, nodeB, context) {
-        this.a = nodeA;
-        this.b = nodeB;
+    constructor(nodeA, nodeB, context, portsList) {
         this.c = context;
         this.strokeColor = "Black";
-        this.DutPorts = [];
-        this.IxiaPort;
+        this.connectionProperties = new Connection(nodeA, nodeB, portsList);
     }
 
     draw() {
@@ -13,8 +10,8 @@ class ConnectionHelper {
         this.c.setLineDash([]);
         this.c.strokeStyle = this.strokeColor;
         this.c.lineWidth = 5;
-        this.c.moveTo(this.a.x,this.a.y);
-        this.c.lineTo(this.b.x,this.b.y);
+        this.c.moveTo(this.connectionProperties.nodeA.x,this.connectionProperties.nodeA.y);
+        this.c.lineTo(this.connectionProperties.nodeB.x,this.connectionProperties.nodeB.y);
         this.c.stroke();
         this.c.closePath();
     }
@@ -28,12 +25,9 @@ class ConnectionHelper {
         // example : lyd592-Et24/1---------100G---------------dm1-rack107-ixia1 - Port 5/5
         let finalString = "";
         Connections.forEach((connection) => {
-            if(connection.IxiaPort != null) { // DUT - TO - DUT 
-                if(connection.a.NodeProperties instanceof Dut) {
-                    finalString += connection.a.NodeProperties.alias+"-"+connection.DutPorts[0].identifier+"----------"+connection.DutPorts[0].speed+"----------"+connection.b.NodeProperties.location+"-"+connection.IxiaPort.identifier+"\n";
-                } else {
-                    finalString += connection.b.NodeProperties.alias+"-"+connection.DutPorts[0].identifier+"----------"+connection.DutPorts[0].speed+"----------"+connection.a.NodeProperties.location+"-"+connection.IxiaPort.identifier+"\n";
-                }
+            if(connection.connectionProperties.nodeA.NodeProperties instanceof Ixia || connection.connectionProperties.nodeB.NodeProperties instanceof Ixia) {
+                // either one of a node is ixia ...
+                finalString += connection.connectionProperties.getConnections();
             }
         });
         return finalString;
@@ -45,8 +39,8 @@ class ConnectionHelper {
         // example : smd420-Et33/1-------------400G------------Et3/1/1-cmp338
         let finalString = "";
         Connections.forEach((connection) => {
-            if(connection.IxiaPort == null) { // DUT - TO - DUT 
-                finalString += connection.a.NodeProperties.alias+"-"+connection.DutPorts[0].identifier+"----------"+connection.DutPorts[0].speed+"----------"+connection.DutPorts[1].identifier+"-"+connection.b.NodeProperties.alias+"\n";
+            if(connection.connectionProperties.nodeA.NodeProperties instanceof Dut && connection.connectionProperties.nodeB.NodeProperties instanceof Dut) {
+                finalString += connection.connectionProperties.getConnections();
             }
         });
         return finalString;
