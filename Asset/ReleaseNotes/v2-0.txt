@@ -1,0 +1,83 @@
+LabRequestor - (v2.0)
+============================================================
+Date of Release : 30th Dec. 2024
+
+
+Overview - (v2.0)
+============================================================
+This release is main focused on the new connections configu-
+ration dialogbox and workflow. Previously, the older version
+was developed with the completely different solution; The u-
+sers were having lots of trouble while configuring larger t-
+opologies. Since it's completely different workflow, We've 
+decided to go with major update of v2.0 followed by v0.0.  
+
+
+What's New
+============================================================
+Below are the features added in this release.
+- New node configuration workflow.
+- New connections configuration workflow.
+- Cancellable connection configuration.
+- Cancellable node configuration.
+- Alerts, Warning/Information and confirmation dialogboxes.
+
+Below are the changes for Developer's workflow.
+- New and Enhanced class structure hierarchy.
+- Easy work management and task management structure.
+- Proper Functional Development.
+
+
+Improvements
+============================================================
+Below are the improvements added as new features.
+- Improved node configuration feature.
+    - Added cancellable Configuation.
+    - Removed port configuration for Ixia type nodes.
+- Improved connections configuration feature.
+    - Added cancellable Configuation.
+    - Added central connection configuration.
+    - Removed some type consuming steps for connection conf-
+      iguration.
+- Improved Alerting mechanism
+    - Added alert message dialog Box
+    - Added confirmation message dialog Box
+    - Added Information message dialog Box
+
+
+Bug Fixes
+============================================================
+None, since no bugs were reported.
+
+
+Known Issues
+============================================================
+- When node tool is selected and clicked on Generate Script
+  button
+- When there are no nodes, Connection tool is selected and
+  clicked on Generate Script button
+
+
+Upgrade Instructions
+============================================================
+You can use github page for accesing the latest update. For
+those who are using in their own device, they can go for re-
+lease notes and from there they can access the zipped code.
+
+For contributors, they can pull the changes from "main" bra-
+nch.
+
+
+Support
+============================================================
+Please use github Discussion page for bug reporting, general
+chat, discussiona and any off-topic conversation.
+
+For anyother support, reach out to me at 
+henilmistry74496@gmail.com
+
+
+Acknowledgements
+============================================================
+Thanks to Arista SysTest team from Banglore office for test-
+ing this software and including this in their workflow.
