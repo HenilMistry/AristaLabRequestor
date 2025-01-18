@@ -10,7 +10,10 @@ let connectionsConfig_warningTxt = document.getElementById('connectionsConfig_wa
 
 let editID = undefined;
 
-function openconnectionsConfigurationModal() {
+/**
+ * Function to open the connections configuration modal.
+ */
+function openConnectionsConfigurationModal() {
     connectionsConfigurationModal.show();
     // Just for testing: Below two lines
     // console.log(firstNode);
@@ -21,6 +24,9 @@ function openconnectionsConfigurationModal() {
     connectionsConfig_LblIdentifierB.innerText = "Port Identifier for : "+secondNode.NodeProperties.alias;
 }
 
+/**
+ * Function to close the connections configuration modal.
+ */
 async function closeConnectionsConfigurationModal() {
     if(ports.length == 0) {
         let result = await openConfirmationModal("Are you sure?","No ports are configured in this connection. Are you sure you want to proceed ?");
@@ -41,6 +47,9 @@ async function closeConnectionsConfigurationModal() {
     // console.log(Connections);
 }
 
+/**
+ * Function to configure the actual connection.
+ */
 function configureConnection() {
     // Below LOC will make sure that User configure at least one port ...
     if(ports.length == 0) {
@@ -98,6 +107,12 @@ function addPortToConnection() {
     connectionsConfig_connections.innerHTML += "<div class='input-group mb-3' id='"+ports[ports.length-1].getID()+"'> <span class='input-group-text'>"+firstNode.NodeProperties.alias+"-"+connectionsConfig_portIdentifierA.value+" === "+connectionsConfig_bandWidth.value+" === "+connectionsConfig_portIdentifierB.value+"-"+secondNode.NodeProperties.alias+"</span> <button class='btn btn-outline-primary' type='button' onclick='updatePortInConnection(\""+ports[ports.length-1].getID()+"\")'> Edit </button> <button class='btn btn-outline-secondary' type='button' onclick='deletePortFromConnection(\""+ports[ports.length-1].getID()+"\")'> Delete </button> </div>";
 }
 
+/**
+ * Function to edit the port in connection
+ * 
+ * @param {*} EditID - Unique Div identification
+ * @returns 
+ */
 async function editPortInConnection(EditID) {
     // Below code controls the flow of either updating or not updating the connection as per thr use choice ...
     const result = await openConfirmationModal("Are you sure?","Do you really want to edit this connection?");
@@ -120,6 +135,11 @@ async function editPortInConnection(EditID) {
     editID = undefined;
 }
 
+/**
+ * Function to update the port in connection.
+ * 
+ * @param {*} DivID Div identification
+ */
 function updatePortInConnection(DivID) {
     // Below code controls the acknowledgement to the user to let them know ...
     openAlertModal("Info!","Now you can edit the port and click on 'Add Port' to confirm!!");

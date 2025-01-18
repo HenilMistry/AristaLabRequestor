@@ -107,7 +107,7 @@ addEventListener("click",(e) => {
                 if(click%2==0) {
                   // it means it's a second click..
                   secondNode = node;
-                  openconnectionsConfigurationModal();
+                  openConnectionsConfigurationModal();
                 } else {
                   firstNode = node;
                 }
@@ -158,7 +158,8 @@ function GenerateCode() {
 
         output += "IXIA Ports Reserved\n==========================\n";
         Connections.forEach((connection) => {
-            console.log(connection);
+            // Just for debugging...
+            // console.log(connection);
             output += connection.connectionProperties.getIxiaPorts()+"\n";
         });
         output += "\n\n";
