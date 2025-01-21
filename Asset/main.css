@@ -8,6 +8,10 @@
     margin-bottom: 0;
 }
 
+#titleOfApp {
+    font-size: x-large;
+}
+
 canvas {
     top: 0;
     left: 0;
