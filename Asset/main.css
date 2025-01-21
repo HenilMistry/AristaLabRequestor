@@ -1,7 +1,11 @@
 .group {
-    top: 0;
-    left: 0;
-    position: absolute;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 10px; /* Space between columns */
+}
+
+.alert {
+    margin-bottom: 0;
 }
 
 canvas {
