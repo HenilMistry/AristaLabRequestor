@@ -16,17 +16,17 @@ function selectTool(name) {
         case Tools.NODE:
             ActiveTool=Tools.NODE;
             NodeToolActivated = 1;
-            label_info.innerHTML = "Selected Node Tool : Now, click anywhere on canvas to add node!";
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Node Tool : Now, click anywhere on canvas to add node!';
             break;
         
         case Tools.CONNECTION:
             ActiveTool=Tools.CONNECTION;
-            label_info.innerHTML = "Selected Connection Tool : Now, click on any two nodes subsequently to add a connection!";
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Connection Tool : Now, click on any two nodes subsequently to add a connection!';
             break;
         
         default:
             ActiveTool = null;
-            label_info.innerHTML = "Select some tool to start making Topology!";
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Select some tool to start making Topology!';
             break;
     }
 }
