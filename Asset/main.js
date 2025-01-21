@@ -174,6 +174,6 @@ function GenerateCode() {
         output += ConnectionHelper.getDutToDutConnections();
         output += "\n\n";
 
-        console.log(output);
+        openOutputModal(output);
     }
 }
