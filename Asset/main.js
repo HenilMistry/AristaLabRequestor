@@ -139,6 +139,7 @@ function GenerateCode() {
         openAlertModal("Alert!","No connections are made! Please add some!");
     } else {
         let output = "";
+        selectTool("none");
 
         output += "Probable location of the DUTS\n=============================\n";
         Nodes.forEach((node) => {
