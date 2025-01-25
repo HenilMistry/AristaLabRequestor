@@ -8,17 +8,31 @@ class Node {
         this.color = color;
         this.c = context;
         this.NodeProperties;
+        this.selected = false;
     }
     
     draw() {
+        this.c.save();
         this.c.beginPath();
         this.c.font = 'italic 18px Arial';
         this.c.fillStyle = this.color;
+        if (this.selected) {
+            this.c.shadowColor = "Red";
+            this.c.shadowBlur = 20;
+        } else {
+            this.c.shadowColor = null;
+        }
         this.c.arc(this.x,this.y,this.radius,Math.PI*2,false);
         this.c.fill();
+
         this.c.fillStyle = "Black";
         this.c.fillText(this.label,this.x,this.y);
         this.c.closePath();
+        this.c.restore();
+    }
+
+    select(selected) {
+        this.selected = selected;
     }
 
     animate(fillColor) {
