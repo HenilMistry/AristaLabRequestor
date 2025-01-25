@@ -40,7 +40,6 @@ async function closeConnectionsConfigurationModal() {
         click = 0;
         firstNode = null;
         secondNode = null;
-        isIxiaNode = false;
         ports = [];
     }
     // Just for debugging ...
