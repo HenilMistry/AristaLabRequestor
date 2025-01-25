@@ -14,8 +14,8 @@ let Nodes, Connections;
 // To keep track of user editing, node properties while adding node...
 /**
  * Simply put,
- * NodeToolActivated = 0 --> user is not editing the node configuration (Stop register click for new node)
- * NodeToolActivated = 1 --> user is editing the ndoe configuration (Register click for new node)
+ * NodeToolActivated = 0 --> user is not editing the node configuration (Register next clicks)
+ * NodeToolActivated = 1 --> user is editing the node configuration (Skip next clicks)
  */
 let NodeToolActivated = 0;
 // Array for storing the objects of Port class...
@@ -114,14 +114,21 @@ addEventListener("click",(e) => {
         });
 
         // if not colliding with some other node...
-        if (!collided && selectedNode==null) {
-            if (NodeToolActivated != 1) {
-                lastX = e.clientX;
-                lastY = e.clientY;
-                ActiveTool = null;
-                openNodeConfig();
+        if (!collided) {
+            if (selectedNode == null) {
+                if (NodeToolActivated != 1) {
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                    ActiveTool = null;
+                    openNodeConfig();
+                }
+                NodeToolActivated = 0;
+            } else {
+                selectTool(Tools.NODE);
+                NodeToolActivated = 0;
+                selectedNode.select(false);
+                selectedNode = null;
             }
-            NodeToolActivated = 0;
         }
     } else if (ActiveTool == Tools.CONNECTION) {
         if(Nodes.length > 0) {
