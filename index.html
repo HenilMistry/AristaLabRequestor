@@ -66,80 +66,116 @@
             </div>
       </div>
 
-        <!-- Port Selection Modal -->
-        <div class="modal fade" id="connectionsConfigurationModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="connectionsConfigurationModalLbl">Connections Configuration</h1>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    
-                    <div class="alert alert-primary" role="alert" id="connectionsConfig_infoBox">
-                      Configure connections between nodes : A and B
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="connectionsConfig_portIdentifierA" class="form-label" id="connectionsConfig_LblIdentifierA">Identifier A</label>
-                      <input type="email" class="form-control" id="connectionsConfig_portIdentifierA" placeholder="Port Identifier">
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="connectionsConfig_portIdentifierB" class="form-label" id="connectionsConfig_LblIdentifierB">Identifier B</label>
-                      <input type="email" class="form-control" id="connectionsConfig_portIdentifierB" placeholder="Port Identifier">
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" placeholder="Enter port's Bandwidth" aria-label="Port Bandwidth" id="connectionsConfig_bandWidth" aria-describedby="connectionsConfig_addBtn">
-                      <button class="btn btn-outline-primary" type="button" id="connectionsConfig_addBtn" onclick="addPortToConnection()">Add Port</button>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="connectionsConfig_connections" class="form-label" id="connectionsConfig_LblConnections">Active Connections</label>
-                      <div class="container" id="connectionsConfig_connections">
-                        <div class="alert alert-warning" role="alert" id="connectionsConfig_warningTxt">
-                          No Active Connections Yet!
-                        </div>
-
-                        <!-- Below is the sample code snippet that should be added dynamically -->
-                        <!-- <div class="input-group mb-3">
-                          <span class="input-group-text">Something-port===Something-port</span>
-                          <button class="btn btn-outline-primary" type="button" id="connectionsConfig_edit">Edit</button>
-                          <button class="btn btn-outline-primary" type="button" id="connectionsConfig_delete">Delete</button>
-                        </div> -->
-                      </div>
-                    </div>
-
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="portSelectionBtn" onclick="configureConnection()">Configure Connection</button>
-                  <button type="button" class="btn btn-danger" id="portSelectionCancelBtn" onclick="closeConnectionsConfigurationModal()">Close!</button>
-                </div>
+      <div class="modal fade" id="nodeManagerModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title fs-5">Node Manager</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNodeManagerModal()"></button>
+            </div>
+            <div class="modal-body">
+              <div><center><h2 id="nodeManagerModal_LblNodeIdentifier">Node Management for : DUT-XYZ</h2></center></div>
+              <h4>Node Information:</h4>
+              <div class="container" id="nodeManagerModal_nodeInfo">
+                Type : Ixix | Dut
+                <br>
+                Movement : To RACK123 | NO Movement
+                <br>
+                Active Connections : 2
+              </div>
+              <h4>Connections of nodes:</h4>
+              <div class="container" id="nodeManagerModal_connections">
+                <!-- Sample code that will be added dynamically... -->
+                <!-- <div class="input-group mb-3">
+                  <span class="input-group-text">DUT-XYZ===========DUT-ABC</span>
+                  <button class="btn btn-outline-primary" type="button" id="">Edit</button>
+                  <button class="btn btn-outline-danger" type="button" id="">Delete</button>
+                </div> -->
               </div>
             </div>
-        </div>
-
-         <!-- Code Output Modal -->
-         <div class="modal fade" tabindex="-5" id="outputModal">
-          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Your Lab Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeOutputModal()"></button>
-              </div>
-              <div class="modal-body" id="outputModalBody">
-                <p>Modal body text goes here.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="closeOutputModal()">Close</button>
-                <button type="button" class="btn btn-primary" onclick="copyOutput()">Copy to clipboard</button>
-              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeNodeManagerModal()">Close</button>
+              <button type="button" class="btn btn-primary" onclick="">Save changes</button>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Port Selection Modal -->
+      <div class="modal fade" id="connectionsConfigurationModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="connectionsConfigurationModalLbl">Connections Configuration</h1>
+              </div>
+              <div class="modal-body">
+                <form>
+                  
+                  <div class="alert alert-primary" role="alert" id="connectionsConfig_infoBox">
+                    Configure connections between nodes : A and B
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="connectionsConfig_portIdentifierA" class="form-label" id="connectionsConfig_LblIdentifierA">Identifier A</label>
+                    <input type="email" class="form-control" id="connectionsConfig_portIdentifierA" placeholder="Port Identifier">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="connectionsConfig_portIdentifierB" class="form-label" id="connectionsConfig_LblIdentifierB">Identifier B</label>
+                    <input type="email" class="form-control" id="connectionsConfig_portIdentifierB" placeholder="Port Identifier">
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter port's Bandwidth" aria-label="Port Bandwidth" id="connectionsConfig_bandWidth" aria-describedby="connectionsConfig_addBtn">
+                    <button class="btn btn-outline-primary" type="button" id="connectionsConfig_addBtn" onclick="addPortToConnection()">Add Port</button>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="connectionsConfig_connections" class="form-label" id="connectionsConfig_LblConnections">Active Connections</label>
+                    <div class="container" id="connectionsConfig_connections">
+                      <div class="alert alert-warning" role="alert" id="connectionsConfig_warningTxt">
+                        No Active Connections Yet!
+                      </div>
+
+                      <!-- Below is the sample code snippet that should be added dynamically -->
+                      <!-- <div class="input-group mb-3">
+                        <span class="input-group-text">Something-port===Something-port</span>
+                        <button class="btn btn-outline-primary" type="button" id="connectionsConfig_edit">Edit</button>
+                        <button class="btn btn-outline-primary" type="button" id="connectionsConfig_delete">Delete</button>
+                      </div> -->
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="portSelectionBtn" onclick="configureConnection()">Configure Connection</button>
+                <button type="button" class="btn btn-danger" id="portSelectionCancelBtn" onclick="closeConnectionsConfigurationModal()">Close!</button>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Code Output Modal -->
+      <div class="modal fade" tabindex="-5" id="outputModal">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Your Lab Request</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeOutputModal()"></button>
+          </div>
+          <div class="modal-body" id="outputModalBody">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="closeOutputModal()">Close</button>
+            <button type="button" class="btn btn-primary" onclick="copyOutput()">Copy to clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
         
+        <!-- Let them be one top of every other modal  -->
         <!-- Confirmation Modal -->
         <!-- Confirmation 1 : About connection deletion confirmation  -->
         <div class="modal fade" id="confirmationModal" tabindex="-1" >
@@ -194,6 +230,7 @@
     <script src="./Asset/Scripts/ToolHelper/nodeToolManager.js"></script>
     <script src="./Asset/Scripts/ToolHelper/connectionToolManager.js"></script>
     <script src="./Asset/Scripts/ToolHelper/outputToolManager.js"></script>
+    <script src="./Asset/Scripts/ToolHelper/nodeManager.js"></script>
 
     <!-- All GuiHelpers -->
     <script src="./Asset/Scripts/GuiHelpers/NodeHelper.js"></script>
