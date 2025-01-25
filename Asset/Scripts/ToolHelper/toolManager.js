@@ -15,6 +15,8 @@ const label_info = document.getElementById("label_info");
 function selectTool(name) {
     switch(name) {
         case Tools.NODE:
+            firstNode = null;
+            secondNode = null;
             ActiveTool=Tools.NODE;
             NodeToolActivated = 1;
             label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Node Tool : Now, click anywhere on canvas to add node!';
@@ -25,12 +27,22 @@ function selectTool(name) {
             break;
         
         case Tools.CONNECTION:
+            if (selectedNode != null) {
+                selectedNode.select(false);
+                selectedNode = null;
+            }
             ActiveTool=Tools.CONNECTION;
             label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Connection Tool : Now, click on any two nodes subsequently to add a connection!';
             break;
         
         default:
+            firstNode = null;
+            secondNode = null;
             ActiveTool=null;
+            if (selectedNode != null) {
+                selectedNode.select(false);
+                selectedNode = null;
+            }
             label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Select some tool to start making Topology!';
             break;
     }
