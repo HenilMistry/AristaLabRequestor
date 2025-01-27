@@ -1,0 +1,71 @@
+LabRequestor - (v2.1)
+============================================================
+Date of Release : 27th Dec. 2024
+
+
+Overview - (v2.1)
+============================================================
+This release is focused mainly on node manager modal -
+(dialogbox) which will allow users to configure and manage
+the connections for nodes with ease. Now, the users are able
+to create, edit, delete nodes as well as connections. Also,
+they can alter the ports in connection whenever they want.
+Also, there are some GUI Changes. Overall, it's a quality 
+of life changes for AristaLabRequestor.
+
+
+What's New
+============================================================
+Below are the features added in this release.
+- New node manager dialogbox.
+- New node manager workflow.
+- New and Enhanced GUI.
+
+
+Improvements
+============================================================
+Below are the improvements added as new features.
+- New node manager dialogbox feature.
+    - Easily manage all the connections for node.
+    - Edit and Delete existing connections.
+    - Option to Delete node.
+- New node manager workflow.
+    - Click to highlight node.
+    - Open node manager dialogbox for managing connections.
+    - Directly manage existing connections from node manager.
+- New and enhanced GUI.
+    - Title of app on top.
+    - Use of icons and tooltip.
+    - Minimalastic and simple UI.
+
+
+Bug Fixes
+============================================================
+- (#6) - There is no indication of script generation comple-
+         ted when clicked on "Generate Description / Script"
+ 
+
+
+Known Issues
+============================================================
+- (#5)
+- (#7)
+
+
+Upgrade Instructions
+============================================================
+You can use github page for accesing the latest update. For
+those who are using in their own device, they can go for re-
+lease notes and from there they can access the zipped code.
+
+For contributors, they can pull the changes from "main" bra-
+nch.
+
+
+Support
+============================================================
+Please use github Discussion page for bug reporting, general
+chat, discussiona and any off-topic conversation.
+
+For anyother support, reach out to me at 
+henilmistry74496@gmail.com
