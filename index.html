@@ -84,6 +84,9 @@
                 Active Connections : 2
               </div>
               <h4>Connections of nodes:</h4>
+              <div class="alert alert-warning" role="alert" id="nodeManager_warningTxt">
+                No Active Connections Yet! Configure connections using Connection tool!
+              </div>
               <div class="container" id="nodeManagerModal_connections">
                 <!-- Sample code that will be added dynamically... -->
                 <!-- <div class="input-group mb-3">
@@ -95,7 +98,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeNodeManagerModal()">Close</button>
-              <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+              <button type="button" class="btn btn-danger" onclick="deleteNode()">Delete Node</button>
             </div>
           </div>
         </div>
