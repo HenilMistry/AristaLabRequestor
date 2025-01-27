@@ -27,6 +27,7 @@ let firstNode = -1;
 let secondNode = null;
 // for node manager modal...
 let selectedNode = null;
+let selectedConnection = null;
 
 let NodeIxia, NodeDut;
 
@@ -106,7 +107,7 @@ addEventListener("click",(e) => {
                     // console.log("Node Highlighted");
                 } else {
                     openNodeManagerModal();
-                    NodeToolActivated = 1;
+                    ActiveTool = null;
                     // Just for debugging...
                     // console.log("Open Node Manager");
                 }
@@ -115,20 +116,19 @@ addEventListener("click",(e) => {
 
         // if not colliding with some other node...
         if (!collided) {
-            if (selectedNode == null) {
-                if (NodeToolActivated != 1) {
+            if (NodeToolActivated != 1) {
+                if (selectedNode == null) {
                     lastX = e.clientX;
                     lastY = e.clientY;
                     ActiveTool = null;
                     openNodeConfig();
+                } else {
+                    selectTool(Tools.NODE);
+                    selectedNode.select(false);
+                    selectedNode = null;
                 }
-                NodeToolActivated = 0;
-            } else {
-                selectTool(Tools.NODE);
-                NodeToolActivated = 0;
-                selectedNode.select(false);
-                selectedNode = null;
             }
+            NodeToolActivated = 0;
         }
     } else if (ActiveTool == Tools.CONNECTION) {
         if(Nodes.length > 0) {
