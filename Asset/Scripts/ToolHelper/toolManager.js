@@ -1,7 +1,8 @@
 // Enum Type, That contins the list of all avilable tools
 const Tools = Object.freeze({
     NODE : "Node",
-    CONNECTION : "Connection"
+    CONNECTION : "Connection",
+    NODE_SELECTION_STATE : "NodeSelectedState"
 });
 
 // A variable to keep track of active, slected tool 
@@ -14,19 +15,35 @@ const label_info = document.getElementById("label_info");
 function selectTool(name) {
     switch(name) {
         case Tools.NODE:
+            firstNode = null;
+            secondNode = null;
             ActiveTool=Tools.NODE;
             NodeToolActivated = 1;
-            label_info.innerHTML = "Selected Node Tool : Now, click anywhere on canvas to add node!";
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Node Tool : Now, click anywhere on canvas to add node!';
+            break;
+        
+        case Tools.NODE_SELECTION_STATE:
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> <b> Selected node : '+selectedNode.label+'! Click again to open node manager. </b>';
             break;
         
         case Tools.CONNECTION:
+            if (selectedNode != null) {
+                selectedNode.select(false);
+                selectedNode = null;
+            }
             ActiveTool=Tools.CONNECTION;
-            label_info.innerHTML = "Selected Connection Tool : Now, click on any two nodes subsequently to add a connection!";
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Selected Connection Tool : Now, click on any two nodes subsequently to add a connection!';
             break;
         
         default:
-            ActiveTool = null;
-            label_info.innerHTML = "Select some tool to start making Topology!";
+            firstNode = null;
+            secondNode = null;
+            ActiveTool=null;
+            if (selectedNode != null) {
+                selectedNode.select(false);
+                selectedNode = null;
+            }
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Select some tool to start making Topology!';
             break;
     }
 }

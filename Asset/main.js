@@ -9,14 +9,25 @@ const mouse = {
     y: innerHeight/2 
 };
 
+// Arrays for storing the objects of Node and ConnectionHelper class...
 let Nodes, Connections;
+// To keep track of user editing, node properties while adding node...
+/**
+ * Simply put,
+ * NodeToolActivated = 0 --> user is not editing the node configuration (Register next clicks)
+ * NodeToolActivated = 1 --> user is editing the node configuration (Skip next clicks)
+ */
 let NodeToolActivated = 0;
+// Array for storing the objects of Port class...
 let ports;
-let PORT_ID = 0;
+// keep track of clicks, for connection tool...
 let click = 0;
+// for connection tool...
 let firstNode = -1;
-let isIxiaNode = false;
 let secondNode = null;
+// for node manager modal...
+let selectedNode = null;
+let selectedConnection = null;
 
 let NodeIxia, NodeDut;
 
@@ -29,7 +40,6 @@ function init() {
     NodeDut = [];
     firstNode = null;
     secondNode = null;
-    PORT_ID = 0;
     click = 0;
 }
 
@@ -83,31 +93,54 @@ addEventListener("mousemove",(e)=>{
 // What to do when mouse is clicked...
 addEventListener("click",(e) => {
     if (ActiveTool == Tools.NODE) {
-       if (NodeToolActivated != 1) {
-        lastX = e.clientX;
-        lastY = e.clientY;
-        ActiveTool = null;
-        openNodeConfig();
-       }
-       NodeToolActivated = 0;
+        let collided = false;
+
+        // Check whether it is colliding with some node...
+        Nodes.forEach((node) => {
+            if(distance(node.x, node.y, mouse.x, mouse.y) <= node.radius) {
+                collided = true;
+                if (selectedNode == null || selectedNode.NodeProperties.getID()!=node.NodeProperties.getID()) {
+                    selectedNode = node;
+                    selectedNode.select(true);
+                    selectTool(Tools.NODE_SELECTION_STATE);
+                    // Just for debugging...
+                    // console.log("Node Highlighted");
+                } else {
+                    openNodeManagerModal();
+                    ActiveTool = null;
+                    // Just for debugging...
+                    // console.log("Open Node Manager");
+                }
+            }
+        });
+
+        // if not colliding with some other node...
+        if (!collided) {
+            if (NodeToolActivated != 1) {
+                if (selectedNode == null) {
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                    ActiveTool = null;
+                    openNodeConfig();
+                } else {
+                    selectTool(Tools.NODE);
+                    selectedNode.select(false);
+                    selectedNode = null;
+                }
+            }
+            NodeToolActivated = 0;
+        }
     } else if (ActiveTool == Tools.CONNECTION) {
         if(Nodes.length > 0) {
             Nodes.forEach((node, index) => {
               if(distance(node.x,node.y,mouse.x,mouse.y) <= node.radius) {
                 // Just for testing...
                 // console.log("Collision with "+index);
-
-                if(node.NodeProperties instanceof Ixia) {
-                    isIxiaNode = true;
-                } else {
-                    isIxiaNode = false;
-                }
-
                 click++;
                 if(click%2==0) {
                   // it means it's a second click..
                   secondNode = node;
-                  openconnectionsConfigurationModal();
+                  openConnectionsConfigurationModal();
                 } else {
                   firstNode = node;
                 }
@@ -139,6 +172,7 @@ function GenerateCode() {
         openAlertModal("Alert!","No connections are made! Please add some!");
     } else {
         let output = "";
+        selectTool("none");
 
         output += "Probable location of the DUTS\n=============================\n";
         Nodes.forEach((node) => {
@@ -158,7 +192,8 @@ function GenerateCode() {
 
         output += "IXIA Ports Reserved\n==========================\n";
         Connections.forEach((connection) => {
-            console.log(connection);
+            // Just for debugging...
+            // console.log(connection);
             output += connection.connectionProperties.getIxiaPorts()+"\n";
         });
         output += "\n\n";
@@ -173,6 +208,6 @@ function GenerateCode() {
         output += ConnectionHelper.getDutToDutConnections();
         output += "\n\n";
 
-        console.log(output);
+        openOutputModal(output);
     }
 }

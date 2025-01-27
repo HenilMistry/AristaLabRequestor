@@ -16,6 +16,17 @@ class Connection {
     }
 
     /**
+     * This function will return the connection string in below form...
+     *      Ex. nodeAlias====================nodeAlias
+     * Typically used for NodeManagerModal...
+     * 
+     * @returns connection string...
+     */
+    toString() {
+        return this.nodeA.NodeProperties.alias+"===================="+this.nodeB.NodeProperties.alias;
+    }
+
+    /**
      * This function will return connections in form of string ...
      *      Ex. nodeIdentifier-PortIdentifier=====================Speed=====================PortIdentifier-nodeIdentifier
      * 
