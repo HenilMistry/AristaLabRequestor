@@ -33,6 +33,22 @@ async function closeConnectionsConfigurationModal() {
         if (!result) {
             return;
         }
+    } else {
+        // check if there are ports left to save in selected connection...
+        if (ports.length > 0 && selectedConnection != null) {
+            connectionsConfig_portIdentifierA.value = "";
+            connectionsConfig_portIdentifierB.value = "";
+            connectionsConfig_bandWidth.value = "";
+            connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
+            connectionsConfig_warningTxt.style.display = "block";
+            ports.forEach((port) => {
+                const DivInHTML = document.getElementById(port.getID());
+                DivInHTML.remove();
+            });
+            selectedConnection.ports = ports;
+            selectedConnection = null;
+        }
+        ports = [];
     }
 
     connectionsConfigurationModal.hide();
@@ -40,7 +56,6 @@ async function closeConnectionsConfigurationModal() {
         click = 0;
         firstNode = null;
         secondNode = null;
-        ports = [];
     }
     // Just for debugging ...
     // console.log(Connections);
@@ -68,13 +83,19 @@ function configureConnection() {
     });
 
     // Below LOC is Logical Part for connection ...
-    let connection = new ConnectionHelper(firstNode, secondNode, c, ports);
-    Connections.push(connection);
+    if (selectedConnection == null) {
+        let connection = new ConnectionHelper(firstNode, secondNode, c, ports);
+        Connections.push(connection);
+    } else {
+        selectedConnection.ports = ports;
+        selectedConnection = null;
+    }
     closeConnectionsConfigurationModal();
 }
 
 /**
- * This function will add render port information on the screen...
+ * This function will add render port information on the screen
+ * when added while configuring the connection...
  * 
  * Default Code Snippet: 
  *  <div class="input-group mb-3">
@@ -104,6 +125,36 @@ function addPortToConnection() {
 
     // Below code controls the rendering part for the newly added ports ...
     connectionsConfig_connections.innerHTML += "<div class='input-group mb-3' id='"+ports[ports.length-1].getID()+"'> <span class='input-group-text'>"+firstNode.NodeProperties.alias+"-"+connectionsConfig_portIdentifierA.value+" === "+connectionsConfig_bandWidth.value+" === "+connectionsConfig_portIdentifierB.value+"-"+secondNode.NodeProperties.alias+"</span> <button class='btn btn-outline-primary' type='button' onclick='updatePortInConnection(\""+ports[ports.length-1].getID()+"\")'> Edit </button> <button class='btn btn-outline-secondary' type='button' onclick='deletePortFromConnection(\""+ports[ports.length-1].getID()+"\")'> Delete </button> </div>";
+}
+
+/**
+ * This function will render ports information on the screen
+ * when opened from node manager modal...
+ * 
+ * @param {*} connection - The object of type connection
+ */
+function renderPortFromConnection(connection) {
+    // Below LOC will make sure to update the information text for nodes...
+    const nodeA = connection.nodeA.NodeProperties.alias;
+    const nodeB = connection.nodeB.NodeProperties.alias;
+    firstNode = connection.nodeA;
+    secondNode = connection.nodeB;
+    connectionsConfig_infoBox.innerText = "Configure connections between nodes : "+nodeA+" and "+nodeB+"";
+    connectionsConfig_LblIdentifierA.innerText = "Port Identifier for : "+nodeA;
+    connectionsConfig_LblIdentifierB.innerText = "Port Identifier for : "+nodeB;
+    connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
+    connectionsConfig_warningTxt.style.display = "none";
+
+    // Below LOC will make sure to render the existing ports...
+    connection.ports.forEach((port) => {
+        ports.push(port);
+        const id = port.getID();
+        connectionsConfig_connections.innerHTML += "<div class='input-group mb-3' id='"+id+"'> <span class='input-group-text'>"+nodeA+"-"+port.identifierA+" === "+port.speed+" === "+port.identifierB+"-"+nodeB+"</span> <button class='btn btn-outline-primary' type='button' onclick='updatePortInConnection(\""+id+"\")'> Edit </button> <button class='btn btn-outline-secondary' type='button' onclick='deletePortFromConnection(\""+id+"\")'> Delete </button> </div>";
+    });
+    connection.ports = null;
+
+    // Below LOC will make sure that it will open the dialog box...
+    connectionsConfigurationModal.show();
 }
 
 /**
