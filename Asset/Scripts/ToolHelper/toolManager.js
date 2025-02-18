@@ -22,7 +22,7 @@ function selectTool(name) {
             secondNode = null;
             ActiveTool=Tools.NODE;
             NodeToolActivated = 1;
-            label_info.innerHTML = infoImagePath + 'Selected Node Tool : Now, click anywhere on canvas to add node!';
+            label_info.innerHTML = infoImagePath + 'Selected Node Tool : Now, Double click anywhere on the canvas to add node!';
             break;
         
         case Tools.NODE_SELECTION_STATE:
