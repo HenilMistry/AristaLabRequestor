@@ -31,6 +31,11 @@ let selectedConnection = null;
 
 let NodeIxia, NodeDut;
 
+// For enabelling the dragging...
+let isDragging = false;
+let draggableNode = null;
+let offsetX, offsetY;
+
 // something to be done initially, put here...
 function init() {
     Nodes = [];
@@ -83,15 +88,42 @@ addEventListener("resize", () => {
 });
 
 // What to do when mousemove event is occurred 
-addEventListener("mousemove",(e)=>{
+canvas.addEventListener("mousemove",(e)=>{
     // console lines are just for testing 
     // console.log(e.x+" "+e.y);
     mouse.x = e.x;
     mouse.y = e.y;
+
+    if(isDragging && draggableNode) {
+        draggableNode.x = mouse.x - offsetX;
+        draggableNode.y = mouse.y - offsetY;
+    }
+});
+
+// Detect mousedown on an Node...
+canvas.addEventListener("mousedown", (e) => {
+    // find the object from all Nodes...
+    draggableNode = Nodes.find(node => 
+        distance(node.x, node.y, mouse.x, mouse.y) <= node.radius
+    );
+
+    // if there exists draggable node...
+    if(draggableNode) {
+        // calculate the offset...
+        isDragging = true;
+        offsetX = mouse.x - draggableNode.x;
+        offsetY = mouse.y - draggableNode.y;
+    }
+});
+
+// Detect mouseup to stop the dragging...
+canvas.addEventListener("mouseup", (e) => {
+    isDragging = false;
+    draggableNode = null;
 });
   
 // What to do when mouse is clicked...
-addEventListener("click",(e) => {
+canvas.addEventListener("click",(e) => {
     if (ActiveTool == Tools.NODE) {
         let collided = false;
 
@@ -100,6 +132,10 @@ addEventListener("click",(e) => {
             if(distance(node.x, node.y, mouse.x, mouse.y) <= node.radius) {
                 collided = true;
                 if (selectedNode == null || selectedNode.NodeProperties.getID()!=node.NodeProperties.getID()) {
+                    // unselecting node, if already selected and passed into this condition...
+                    if (selectedNode != null) {
+                        selectedNode.select(false);
+                    }
                     selectedNode = node;
                     selectedNode.select(true);
                     selectTool(Tools.NODE_SELECTION_STATE);
