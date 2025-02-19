@@ -1,0 +1,59 @@
+LabRequestor - (v2.1)
+============================================================
+Date of Release : 19th Feb. 2024
+
+
+Overview - (v2.1)
+============================================================
+This release is focused on user experience enhancements. Ma-
+inly it includes the feature of dragging the nodes. This re-
+lease enables users to drag the nodes and fixes some known b-
+ugs.
+
+
+What's New
+============================================================
+Below are the features added in this release.
+- Enable dragging for the nodes.
+- Some known bug fixes.
+
+
+Improvements
+============================================================
+Below are the improvements added as new features.
+- Enable Dragging the nodes.
+    - Now, user can drag the nodes around the canvas.
+    - They can move and replace the nodes around.
+
+
+Bug Fixes
+============================================================
+- (#5) - When node tool is selected and clicked on Generate 
+        Script button, The alert box and node configuration 
+        box appears together. Since, click is registered on 
+        the canvas as well as on the button.
+ 
+
+
+Known Issues
+============================================================
+- (#7)
+
+
+Upgrade Instructions
+============================================================
+You can use github page for accesing the latest update. For
+those who are using in their own device, they can go for re-
+lease notes and from there they can access the zipped code.
+
+For contributors, they can pull the changes from "main" bra-
+nch.
+
+
+Support
+============================================================
+Please use github Discussion page for bug reporting, general
+chat, discussiona and any off-topic conversation.
+
+For anyother support, reach out to me at 
+henilmistry74496@gmail.com
