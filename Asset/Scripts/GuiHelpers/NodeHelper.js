@@ -1,3 +1,8 @@
+const defaultImg_NodeDut = new Image();
+defaultImg_NodeDut.src = "./Asset/Icons/DutImg.png";
+const defaultImg_NodeIxia = new Image();
+defaultImg_NodeIxia.src = "./Asset/Icons/IxiaImg.png";
+
 // A class for rendering the node for graph on canvas 
 class Node {
     constructor(label,x,y,radius,color,context) {
@@ -14,7 +19,7 @@ class Node {
     draw() {
         this.c.save();
         this.c.beginPath();
-        this.c.font = 'italic 18px Arial';
+        this.c.font = 'bold italic 18px Arial';
         this.c.fillStyle = this.color;
         if (this.selected) {
             this.c.shadowColor = "Red";
