@@ -153,13 +153,18 @@ function changeCustomImage(ofWhat) {
     fileInput.addEventListener("change", function() {
         if (fileInput.files.length > 0) {
             let file = fileInput.files[0];
-            let url = URL.createObjectURL(file);
             
-            if (ofWhat == "forNodeIxia") {
-                settingsObj.canvasUtilities.customNodeIxia.url = url;
-            } else {
-                settingsObj.canvasUtilities.customNodeDut.url = url;
-            }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (ofWhat == "forNodeIxia") {
+                    settingsObj.canvasUtilities.customNodeIxia.url = e.target.result;
+                } else {
+                    settingsObj.canvasUtilities.customNodeDut.url = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+            
+            let url = URL.createObjectURL(file);
             
             img.src = url;
             img.style.display = "block";
