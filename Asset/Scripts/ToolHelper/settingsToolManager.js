@@ -1,36 +1,52 @@
 let settingsObj = {
     keyBindings: {
+        chkBoxId: "enableKeyBindings",
         isEnabled: false,
         selectNodeTool: {
             isEnabled: false,
             code: "KeyN",
+            chkBoxId: "enableKeyBindingForNodeTool",
+            keyBindingId: "key_enableKeyBindingForNodeTool"
         },
         selectConnectionTool: {
             isEnabled: false,
             code: "KeyC",
+            chkBoxId: "enableKeyBindingForConnectionTool",
+            keyBindingId: "key_enableKeyBindingForConnectionTool"
         },
         openSettings: {
             isEnabled: false,
             code: "KeyS",
+            chkBoxId: "enableKeyBindingForSettings",
+            keyBindingId: "key_enableKeyBindingForSettings"
         },
         generateCode: {
             isEnabled: false,
             code: "KeyG",
+            chkBoxId: "enableKeyBindingForGenerateCode",
+            keyBindingId: "key_enableKeyBindingForGenerateCode"
         },
         unselectTool: {
             isEnabled: false,
             code: "Escape",
+            chkBoxId: "enableKeyBindingForUnselectTool",
+            keyBindingId: "key_enableKeyBindingForUnselectTool"
         }
     },
     canvasUtilities: {
+        chkBoxId: "enableCanvasUtilities",
         isEnabled: false,
         customNodeDut: {
             isEnabled: false,
             url: "./Asset/Icons/DutImg.png",
+            chkBoxId: "enableCustomNodeImage",
+            imgPreviewId: "img_node"
         },
         customNodeIxia: {
             isEnabled: false,
             url: "./Asset/Icons/IxiaImg.png",
+            chkBoxId: "enableCustomIxiaImage",
+            imgPreviewId: "img_ixia"
         }
     }
 }
@@ -218,6 +234,49 @@ function enableCustomImage(forWhat) {
         break;
     }
     console.log(settingsObj);
+}
+
+function saveSettings() {
+    // Store a JSON object (convert to string first)
+    localStorage.setItem("AristaLabRequestorAppSettings", JSON.stringify(settingsObj));
+    console.log("Data written to local storage.");
+
+    openAlertModal("Success!","Settings has been saved for later use!");
+}
+
+function loadSettings() {
+    // Read and parse a JSON object
+    const appSettings = localStorage.getItem("AristaLabRequestorAppSettings");
+    if (appSettings) {
+        settingsObj = JSON.parse(appSettings);
+        console.log("App Settings:", settingsObj);
+
+        // gui adjust according to app settings...
+        Object.entries(settingsObj.keyBindings).forEach(([key, value])=> {
+            if (key != "isEnabled") {
+                if (key == "chkBoxId") {
+                    document.getElementById(value).checked = settingsObj.keyBindings.isEnabled;
+                } else {
+                    document.getElementById(value.chkBoxId).checked = value.isEnabled;
+                    document.getElementById(value.keyBindingId).innerText = value.code;
+                }
+            }
+        });
+
+        Object.entries(settingsObj.canvasUtilities).forEach(([key, value]) => {
+            if (key != "isEnabled") {
+                if (key == "chkBoxId") {
+                    document.getElementById(value).checked = settingsObj.canvasUtilities.isEnabled;
+                } else {
+                    document.getElementById(value.chkBoxId).checked = value.isEnabled;
+                    document.getElementById(value.imgPreviewId).src = value.url;
+                }
+            }
+        });
+
+    } else {
+        console.log("No app settings data found.");
+    }
 }
 
 window.addEventListener("keydown", (event)=>{
