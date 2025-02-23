@@ -1,6 +1,6 @@
-const defaultImg_NodeDut = new Image();
+let defaultImg_NodeDut = new Image();
 defaultImg_NodeDut.src = "./Asset/Icons/DutImg.png";
-const defaultImg_NodeIxia = new Image();
+let defaultImg_NodeIxia = new Image();
 defaultImg_NodeIxia.src = "./Asset/Icons/IxiaImg.png";
 
 // A class for rendering the node for graph on canvas 
@@ -17,18 +17,38 @@ class Node {
     }
     
     draw() {
+        // basic start point of drawing...
         this.c.save();
         this.c.beginPath();
+        // first of all setting the style of fonts...
         this.c.font = 'bold italic 18px Arial';
         this.c.fillStyle = this.color;
+
+        // highlighting for selection of node...
         if (this.selected) {
             this.c.shadowColor = "Red";
             this.c.shadowBlur = 20;
         } else {
             this.c.shadowColor = null;
         }
-        this.c.arc(this.x,this.y,this.radius,Math.PI*2,false);
-        this.c.fill();
+
+        // drawing image if selected from setting...
+        if (settingsObj.canvasUtilities.isEnabled && settingsObj.canvasUtilities.customNodeDut.isEnabled && this.NodeProperties instanceof Dut) {
+            // condition 1 - if canvas utilities is enabled
+            // condition 2 - if custom node dut is enabled
+            // condition 3 - this node is type of dut
+            defaultImg_NodeDut = new Image();
+            defaultImg_NodeDut.src = settingsObj.canvasUtilities.customNodeDut.url;
+            this.c.drawImage(defaultImg_NodeDut, this.x-this.radius,this.y-this.radius,this.radius*2,this.radius*2);
+        } else if (settingsObj.canvasUtilities.isEnabled && settingsObj.canvasUtilities.customNodeIxia.isEnabled && this.NodeProperties instanceof Ixia) {
+            defaultImg_NodeIxia = new Image();
+            defaultImg_NodeIxia.src = settingsObj.canvasUtilities.customNodeIxia.url;
+            this.c.drawImage(defaultImg_NodeIxia, this.x-this.radius,this.y-this.radius,this.radius*2,this.radius*2);
+        } else {
+            // drawing default node...
+            this.c.arc(this.x,this.y,this.radius,Math.PI*2,false);
+            this.c.fill();
+        }
 
         this.c.fillStyle = "Black";
         this.c.fillText(this.label,this.x,this.y);
