@@ -79,6 +79,10 @@ function animationLoop() {
     }
 }
 
+window.addEventListener("load",()=> {
+    loadSettings();
+});
+
 // What to do when window is resized 
 addEventListener("resize", () => {
     canvas.width = innerWidth;
