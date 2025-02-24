@@ -1,0 +1,56 @@
+LabRequestor - (v3.0)
+============================================================
+Date of Release : 24th Feb. 2024
+
+
+Overview - (v2.1)
+============================================================
+This release is focused on the user experience and enhancem-
+ents. Mainly this release includes the Quality of life chan-
+ges including setting menu that can be very helpful for 
+users to perform their regular tasks.
+
+
+What's New
+============================================================
+Below are the features added in this release.
+- Setting menu.
+- Key Bindings for actions.
+- Custom image support for nodes.
+
+
+Improvements
+============================================================
+Below are the improvements added as new features.
+- GUI enhancements
+- User experience enhancements
+- QoL Changes
+
+
+Bug Fixes
+============================================================
+- None
+
+
+Known Issues
+============================================================
+- (#7)
+
+
+Upgrade Instructions
+============================================================
+You can use github page for accesing the latest update. For
+those who are using in their own device, they can go for re-
+lease notes and from there they can access the zipped code.
+
+For contributors, they can pull the changes from "main" bra-
+nch.
+
+
+Support
+============================================================
+Please use github Discussion page for bug reporting, general
+chat, discussiona and any off-topic conversation.
+
+For anyother support, reach out to me at 
+henilmistry74496@gmail.com
