@@ -4,7 +4,8 @@
   "description": "The lab requestor for Arista",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-server": "http-server -p 8000",
+    "test": "concurrently \"npm run start-server\" \"cypress run\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/HenilMistry/AristaLabRequestor#readme",
   "devDependencies": {
-    "cypress": "^14.5.0"
+    "cypress": "^14.5.0",
+    "http-server": "^14.1.1"
   }
 }
