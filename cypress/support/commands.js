@@ -25,6 +25,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-real-events/support';
+
 /**
  * This custom command click on Node Tool button
  * and verifies that the label is updated.
@@ -38,12 +40,43 @@ Cypress.Commands.add('clickOnNodeTool', () => {
 });
 
 /**
- * This command clicks on canvas at given point 
- * (x, y) and verifies whether the NodeConfigura-
- * tionModal is visible.
+ * This command double clicks on canvas at given point 
+ * (x, y) and verifies whether the NodeConfigurationModal 
+ * is visible.
+ */
+Cypress.Commands.add('dblClickOnCanvas', (x, y) => {
+    cy.get("canvas").should("be.visible");
+    cy.get("canvas").dblclick(x, y);
+})
+
+/**
+ * This command single click on canvas at given point 
+ * (x, y).
  */
 Cypress.Commands.add('clickOnCanvas', (x, y) => {
     cy.get("canvas").should("be.visible");
-    cy.get("canvas").dblclick(x, y);
+    cy.get("canvas").click(x, y);
+})
+
+/**
+ * This command will add a node on canvas at point
+ * (x, y) with the properties given by the user.
+ */
+Cypress.Commands.add('addNodeOnCanvas', (x, y, type, alias, location, moveto) => {
+    cy.dblClickOnCanvas(x, y);
     cy.get("#nodeConfigModal").should("be.visible");
+    cy.get("#nodeType").select(type);
+    cy.get("#nodeAlias").type(alias);
+    cy.get("#nodeLocation").type(location);
+    if (type != "IXIA") {
+        if (typeof moveto === "boolean") {
+            cy.get("#enableMoveTo").uncheck();
+        } else {
+            cy.get("#enableMoveTo").check();
+            cy.get("#moveTo").type(moveto);
+        }
+    }
+    cy.get("#nodeConfigModal > div > div > div.modal-footer > button").click().then(() => {
+        cy.get("#nodeConfigModal").should("not.be.visible");
+    });
 })
