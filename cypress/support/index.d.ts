@@ -7,10 +7,20 @@ declare namespace Cypress {
      */
     clickOnNodeTool(): Chainable<void>;
     /**
-     * This command clicks on canvas at given point 
-     * (x, y) and verifies whether the NodeConfigura-
-     * tionModal is visible.
+     * This command double clicks on canvas at given point 
+     * (x, y) and verifies whether the NodeConfigurationModal 
+     * is visible.
+     */
+    dblClickOnCanvas(x, y): Chainable<IArguments, IArguments>;
+    /**
+     * This command single click on canvas at given point 
+     * (x, y).
      */
     clickOnCanvas(x, y): Chainable<IArguments, IArguments>;
+    /**
+     * This command will add a node on canvas at point
+     * (x, y) with the properties given by the user.
+     */
+    addNodeOnCanvas(x, y, type, alias, location, moveto): Chainable<IArguments, IArguments, IArguments, IArguments, IArguments, IArguments>;
   }
 }
