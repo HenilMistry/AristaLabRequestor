@@ -68,6 +68,7 @@ async function closeConnectionsConfigurationModal() {
                 if (index != -1) {
                     Connections.splice(index, 1);
                 }
+                updateNodeInfoInNodeManager();
                 renderConnnections();
                 hideConnnectionsConfigurationModal();
             } else {
