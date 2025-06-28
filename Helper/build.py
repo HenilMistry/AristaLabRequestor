@@ -75,7 +75,7 @@ def generate_types(json_path, output_path="index.d.ts"):
 
     ts_lines.append("  }\n}")
     
-    with save_file(output_path) as f:
+    with save(BASE_DIR/output_path) as f:
         f.write("\n".join(ts_lines))
 
 if __name__ == "__main__":
@@ -85,9 +85,9 @@ if __name__ == "__main__":
     save_default(all_custom_commands)
     generate_types("commands.json", output_path="cypress/support/index.d.ts") 
 
-    all_command_names = ", ".join([f"{command.name}" for command in all_custom_commands])
+    all_command_names = ", ".join([f"{command["name"]}" for command in all_custom_commands])
     repo = git.Repo(local_resource["REPO_PATH"])
-    repo.index.add(["**/support/command.js"])
+    repo.index.add([f"{BASE_DIR.absolute()}/cypress/support/commands.js"])
     repo.index.commit(f"Added new custom commands : {all_command_names}")
-    repo.index.add(["**/support/index.d.ts"])
+    repo.index.add([f"{BASE_DIR.absolute()}/cypress/support/index.d.ts"])
     repo.index.commit(f"Auto generated TypeScript file for commands : {all_command_names} to help in auto completion")
