@@ -12,6 +12,12 @@ declare namespace Cypress {
 
     
     /**
+    * This custom command will verify the label.
+    */
+    verifyLabel(regex): Chainable<IArguments>;
+
+    
+    /**
     * This command double clicks on canvas at given point (x, y) and verifies whether the NodeConfigurationModal is visible.
     */
     dblClickOnCanvas(x, y): Chainable<IArguments, IArguments>;
