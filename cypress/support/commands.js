@@ -44,6 +44,15 @@ Cypress.Commands.add('clickOnTool', (tool) => {
 });
 
 /**
+ * This custom command will verify the label.
+ */
+Cypress.Commands.add('verifyLabel', (regex) => {
+    cy.get(Cypress.env('TEXT_LBL_INFO')).invoke("text").then((txt) => {
+        expect(txt.trim()).to.match(regex);
+    })
+})
+
+/**
  * This command double clicks on canvas at given point 
  * (x, y) and verifies whether the NodeConfigurationModal 
  * is visible.
