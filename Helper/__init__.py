@@ -12,9 +12,15 @@ def get_file(filename, mode='r'):
     file_path = DATA_DIR / filename
     return file_path.open(mode)
 
+def get(filepath, mode='r'):
+    return filepath.open(mode)
+
 def save_file(filename):
     file_path = DATA_DIR / filename
     return file_path.open('w')
+
+def save(filpath):
+    return filpath.open('w')
 
 def open_default():
     with get_file(DEFAULT_FILE) as local_resources:
