@@ -34,5 +34,11 @@ declare namespace Cypress {
     */
     addNodeOnCanvas(x, y, type, alias, location, moveto): Chainable<IArguments, IArguments, IArguments, IArguments, IArguments, IArguments>;
 
+    
+    /**
+    * This custom command receives the object of nodes and prints/add all of them on canvas.
+    */
+    addNodesOnCanvas(nodes): Chainable<IArguments>;
+
   }
 }
