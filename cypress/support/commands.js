@@ -99,7 +99,7 @@ Cypress.Commands.add('addNodeOnCanvas', (x, y, type, alias, location, moveto) =>
  * and prints/add all of them on canvas.
  */
 Cypress.Commands.add('addNodesOnCanvas', (nodes) => {
-    nodes.forEach((node) => {
-        cy.addNodeOnCanvas(node.x, node.y, node.type, node.alias, node.location, node.moveto);
-    });
+    for (let node in nodes) {
+        cy.addNodeOnCanvas(nodes[node].x, nodes[node].y, nodes[node].type, nodes[node].alias, nodes[node].location, nodes[node].moveto);
+    }
 })
