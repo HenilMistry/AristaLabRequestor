@@ -93,3 +93,13 @@ Cypress.Commands.add('addNodeOnCanvas', (x, y, type, alias, location, moveto) =>
         cy.get("#nodeConfigModal").should("not.be.visible");
     });
 })
+
+/**
+ * This custom command receives the object of nodes 
+ * and prints/add all of them on canvas.
+ */
+Cypress.Commands.add('addNodesOnCanvas', (nodes) => {
+    nodes.forEach((node) => {
+        cy.addNodeOnCanvas(node.x, node.y, node.type, node.alias, node.location, node.moveto);
+    });
+})
