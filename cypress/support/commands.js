@@ -26,13 +26,19 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 /**
- * This custom command click on Node Tool button
- * and verifies that the label is updated.
+ * This custom command clicks on desired tool 
+ * button and verifies that the label is updated
+ * if requires.
  */
-Cypress.Commands.add('clickOnNodeTool', () => {
-    cy.get("button[title='Node Tool']").click().then(() => {
+Cypress.Commands.add('clickOnTool', (tool) => {
+    cy.get(`button[title='${tool}']`).click().then(() => {
         cy.get("#label_info").invoke("text").then((txt) => {
-            expect(txt.trim()).to.match(/Selected Node Tool/i)
+            if (tool=="Node Tool") {
+                expect(txt.trim()).to.match(/Selected Node Tool/i)
+            } else if (tool=="Connection Tool") {
+                expect(txt.trim()).to.match(/Selected Connection Tool/i)
+            }
+            // else do nothing...
         });
     })
 });
