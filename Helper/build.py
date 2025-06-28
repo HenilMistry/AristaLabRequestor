@@ -88,6 +88,6 @@ if __name__ == "__main__":
     all_command_names = ", ".join([f"{command["name"]}" for command in all_custom_commands])
     repo = git.Repo(local_resource["REPO_PATH"])
     repo.index.add([f"{BASE_DIR.absolute()}/cypress/support/commands.js"])
-    repo.index.commit(f"Added new custom commands : {all_command_names}")
+    repo.index.commit(f"[BUILD-AUTO-COMMIT] Added new custom commands : {all_command_names}")
     repo.index.add([f"{BASE_DIR.absolute()}/cypress/support/index.d.ts"])
-    repo.index.commit(f"Auto generated TypeScript file for commands : {all_command_names} to help in auto completion")
+    repo.index.commit(f"[BUILD-AUTO-COMMIT] Auto generated TypeScript file for commands : {all_command_names} to help in auto completion")
