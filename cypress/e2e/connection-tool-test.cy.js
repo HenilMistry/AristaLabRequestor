@@ -1,36 +1,90 @@
 describe("Test cases for testing of Connection Tool", () => {
 
-    before(() => {
+    const tool = "Connection Tool";
+    const points = Object.freeze({
+        a: {
+            x: 300,
+            y: 300
+        },
+        b: {
+            x: 500,
+            y: 300
+        } 
+    });
+    const nodes = Object.freeze({
+        node_one: {
+            x: points.a.x,
+            y: points.a.y,
+            type: "DUT",
+            alias: "node-one",
+            location: "surat",
+            moveto: "blr"
+        },
+        node_two: {
+            x: points.b.x,
+            y: points.b.y,
+            type: "IXIA",
+            alias: "node-two",
+            location: "blr",
+            moveto: false
+        }
+    });
+
+    beforeEach(() => {
         cy.visit("/");
     })
 
     // Test Case 01 - Should be able to select Connection Tool
     it("Checks whether the connection tool is working", () => {
         // 1) Click on "Connection Tool"
+        cy.clickOnTool(tool);
 
         // 2) Verify the label info text
+        cy.verifyLabel(/selected connection tool/i);
 
         // 3) Click on canvas 
+        cy.clickOnCanvas(points.a.x, points.a.y);
 
         // 4) Verify the Alert Message appears
+        cy.get("#alertModal").should("be.visible");
+        cy.get("#alertModalBody").invoke("text").then((txt) => {
+            expect(txt.trim()).to.match(/no nodes on the canvas/i);
+        });
+        cy.get("#alertModal > div > div > div.modal-footer > button").click().then(() => {
+            cy.get("#alertModal").should("not.be.visible");
+        });
 
         // 5) Verify the tool is un-selected
+        cy.verifyLabel(/select some tool/i);
 
+        // 6) Again click on canvas but this time, close the alert with "close icon"
+        cy.clickOnTool(tool);
+        cy.clickOnCanvas(points.b.x, points.b.y);
+        cy.get("#alertModal > div > div > div.modal-header > button").click().then(() => {
+            cy.get("#alertModal").should("not.be.visible");
+        });
+        cy.verifyLabel(/select some tool/i);
     })
 
     // Test Case 02 - Connection configuration modal should be working
     it("Checks whether the connection configuration modal is working", () => {
-        // 1) Click on canvas to add node at (200, 200)
+        cy.clickOnTool(Cypress.env('TOOL_NODE'));
 
-        // 2) Click on canvas to add node at (400, 200)
+        // 1) Click on canvas to add node at point a
+        // 2) Click on canvas to add node at point b
+        cy.addNodesOnCanvas(nodes);
 
         // 3) Click on "Connection Tool"
+        cy.clickOnTool(Cypress.env('TOOL_CONNECTION'));
 
-        // 4) Click on canvas at (200, 200)
+        // 4) Click on canvas at point a
+        cy.clickOnCanvas(points.a.x, points.a.y);
 
-        // 5) Click on canvas at (400, 200)
+        // 5) Click on canvas at point b
+        cy.clickOnCanvas(points.b.x, points.b.y);
 
         // 6) Verify the Connection Configuration Modal
+        cy.get("#connectionsConfigurationModalLbl").should("be.visible");
     })
 
     // Test Case 03 - Should be able to cancel the connection
@@ -54,7 +108,7 @@ describe("Test cases for testing of Connection Tool", () => {
         // 9) Verify connection configuation modal is not visible
     })
 
-    // Test Case 04 - Should be able to add a connection
+    // Test Case 04 - Should be able to add a connection port
     it("Checks whether the connection can be added", () => {
         // 1) Verify the connection tool is still selected
 
@@ -68,7 +122,14 @@ describe("Test cases for testing of Connection Tool", () => {
 
         // 6) Verify the connection port is added
 
-        // 7) 
     })
+
+    // Test Case 05 - Should be able to delete a connection port
+
+    // Test Case 06 - Should be able to edit a connection port
+
+    // Test Case 07 - Close button of connections config modal should be working fine
+
+    // Test Case 08 - Should be able to configure a connection
 
 });
