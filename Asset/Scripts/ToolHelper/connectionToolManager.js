@@ -79,6 +79,8 @@ async function closeConnectionsConfigurationModal() {
             let confirmation = await openConfirmationModal("Are you sure?","No ports are configured in this connection. Are you sure you want to proceed ?");
             if (!confirmation) {
                 return;
+            } else {
+                hideConnnectionsConfigurationModal();
             }
         }
     } else {
