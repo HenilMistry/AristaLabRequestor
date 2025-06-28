@@ -25,8 +25,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import 'cypress-real-events/support';
-
 /**
  * This custom command click on Node Tool button
  * and verifies that the label is updated.
