@@ -30,7 +30,7 @@ describe("Test cases for testing of Connection Tool", () => {
         cy.verifyLabel(/select some tool/i);
 
         // 6) Again click on canvas but this time, close the alert with "close icon"
-        cy.clickOnTool(tool);
+        cy.clickOnTool(tools.TOOL_CONNECTION);
         cy.clickOnCanvas(points.b.x, points.b.y);
         cy.get("#alertModal > div > div > div.modal-header > button").click().then(() => {
             cy.get("#alertModal").should("not.be.visible");
