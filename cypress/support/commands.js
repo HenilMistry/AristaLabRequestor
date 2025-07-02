@@ -25,6 +25,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { tools, nodes } from "./constants";
+
 /**
  * This custom command clicks on desired tool 
  * button and verifies that the label is updated
@@ -79,14 +81,14 @@ Cypress.Commands.add('addNodeOnCanvas', (x, y, type, alias, location, moveto) =>
     cy.dblClickOnCanvas(x, y);
     cy.get("#nodeConfigModal").should("be.visible");
     cy.get("#nodeType").select(type);
-    cy.get("#nodeAlias").type(alias);
-    cy.get("#nodeLocation").type(location);
+    cy.get("#nodeAlias").clear().type(alias);
+    cy.get("#nodeLocation").clear().type(location);
     if (type != "IXIA") {
         if (typeof moveto === "boolean") {
             cy.get("#enableMoveTo").uncheck();
         } else {
             cy.get("#enableMoveTo").check();
-            cy.get("#moveTo").type(moveto);
+            cy.get("#moveTo").clear().type(moveto);
         }
     }
     cy.get("#nodeConfigModal > div > div > div.modal-footer > button").click().then(() => {
@@ -112,6 +114,26 @@ Cypress.Commands.add('testSetupForConnectionsTool', () => {
     cy.clickOnTool(tools.TOOL_NODE);
     cy.addNodesOnCanvas(nodes);
     cy.clickOnTool(tools.TOOL_CONNECTION);
-    cy.clickOnCanvas(points.a.x, points.a.y);
-    cy.clickOnCanvas(points.b.x, points.b.y);
 })
+
+/**
+ * This command will help you add the port to
+ * the connection.
+ */
+Cypress.Commands.add('addPortToConnection', (id_a, id_b, bw) => {
+    cy.get("#connectionsConfigurationModal").should("be.visible");
+    cy.get("#connectionsConfig_portIdentifierA").clear().type(id_a);
+    cy.get("#connectionsConfig_portIdentifierB").clear().type(id_b);
+    cy.get("#connectionsConfig_bandWidth").clear().type(bw);
+    cy.get("#connectionsConfig_addBtn").click();
+})
+
+/**
+ * This command will receive the list of 
+ * ports and add them to current connection.
+ */
+Cypress.Commands.add('addPortsToConnection', (ports) => {
+    for (let port in ports) {
+        cy.addPortToConnection(ports[port].identifier_a, ports[port].identifier_b, ports[port].bandwidth);
+    }
+});
