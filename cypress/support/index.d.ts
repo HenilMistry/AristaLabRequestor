@@ -40,5 +40,11 @@ declare namespace Cypress {
     */
     addNodesOnCanvas(nodes): Chainable<IArguments>;
 
+    
+    /**
+    * This custom command help you set-up the test for Connections Tool.
+    */
+    testSetupForConnectionsTool(): Chainable<void>;
+
   }
 }
