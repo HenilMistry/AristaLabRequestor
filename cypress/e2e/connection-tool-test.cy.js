@@ -1,34 +1,8 @@
+import { points, nodes } from "../support/constants";
+
 describe("Test cases for testing of Connection Tool", () => {
 
     const tool = "Connection Tool";
-    const points = Object.freeze({
-        a: {
-            x: 300,
-            y: 300
-        },
-        b: {
-            x: 500,
-            y: 300
-        } 
-    });
-    const nodes = Object.freeze({
-        node_one: {
-            x: points.a.x,
-            y: points.a.y,
-            type: "DUT",
-            alias: "node-one",
-            location: "surat",
-            moveto: "blr"
-        },
-        node_two: {
-            x: points.b.x,
-            y: points.b.y,
-            type: "IXIA",
-            alias: "node-two",
-            location: "blr",
-            moveto: false
-        }
-    });
 
     beforeEach(() => {
         cy.visit("/");
