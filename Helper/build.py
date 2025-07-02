@@ -136,7 +136,7 @@ if __name__ == "__main__":
     newly_added_commands = ", ".join([f"{command["name"]}" for command in changes["new_commands"]])
     updated_commands = ", ".join([f"{command["name"]}" for command in changes["updated_commands"]])
     deleted_commands = ", ".join([f"{command["name"]}" for command in changes["deleted_commands"]])
-    print(changes)
+    
     repo = git.Repo(local_resource["REPO_PATH"])
     repo.index.add([f"{BASE_DIR.absolute()}/cypress/support/commands.js"])
     repo.index.commit(f"[BUILD-AUTO-COMMIT] Added new custom commands : {newly_added_commands}; Updated commands : {updated_commands}; Deleted Commands : {deleted_commands}")
