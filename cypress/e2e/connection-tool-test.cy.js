@@ -9,7 +9,7 @@ describe("Test cases for testing of Connection Tool", () => {
     // Test Case 01 - Should be able to select Connection Tool
     it("Checks whether the connection tool is working", () => {
         // 1) Click on "Connection Tool"
-        cy.clickOnTool(tool);
+        cy.clickOnTool(tools.TOOL_CONNECTION);
 
         // 2) Verify the label info text
         cy.verifyLabel(/selected connection tool/i);
