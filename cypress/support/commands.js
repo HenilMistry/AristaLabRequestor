@@ -103,3 +103,15 @@ Cypress.Commands.add('addNodesOnCanvas', (nodes) => {
         cy.addNodeOnCanvas(nodes[node].x, nodes[node].y, nodes[node].type, nodes[node].alias, nodes[node].location, nodes[node].moveto);
     }
 })
+
+/**
+ * This custom command help you set-up the 
+ * test for Connections Tool.
+ */
+Cypress.Commands.add('testSetupForConnectionsTool', () => {
+    cy.clickOnTool(tools.TOOL_NODE);
+    cy.addNodesOnCanvas(nodes);
+    cy.clickOnTool(tools.TOOL_CONNECTION);
+    cy.clickOnCanvas(points.a.x, points.a.y);
+    cy.clickOnCanvas(points.b.x, points.b.y);
+})
