@@ -46,5 +46,17 @@ declare namespace Cypress {
     */
     testSetupForConnectionsTool(): Chainable<void>;
 
+    
+    /**
+    * This command will help you add the port to the connection.
+    */
+    addPortToConnection(id_a, id_b, bw): Chainable<IArguments, IArguments, IArguments>;
+
+    
+    /**
+    * This command will receive the list of ports and add them to current connection.
+    */
+    addPortsToConnection(ports): Chainable<IArguments>;
+
   }
 }
