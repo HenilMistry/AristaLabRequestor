@@ -1,4 +1,5 @@
 let settingsObj = {
+    version: "v4.0",
     keyBindings: {
         chkBoxId: "enableKeyBindings",
         isEnabled: false,
@@ -31,7 +32,14 @@ let settingsObj = {
             code: "Escape",
             chkBoxId: "enableKeyBindingForUnselectTool",
             keyBindingId: "key_enableKeyBindingForUnselectTool"
-        }
+        },
+        // TODO: Need to work on this...
+        // saveTopology: {
+        //     isEnabled: true,
+        //     code: "KeyQ",
+        //     chkBoxId: "enableKeyBindingForSavingTopology",
+        //     keyBindingId: "key_enableKeyBindingForSavingTopology"
+        // }
     },
     canvasUtilities: {
         chkBoxId: "enableCanvasUtilities",
@@ -48,6 +56,9 @@ let settingsObj = {
             chkBoxId: "enableCustomIxiaImage",
             imgPreviewId: "img_ixia"
         }
+    },
+    topologyConfiguration: {
+        codeFormat: "Lab Request - SysTest"
     }
 }
 
@@ -127,12 +138,23 @@ async function changeKeyBinding(forWhat) {
         }
         break;
 
-        default: {
+        case "default": {
             keyText = document.getElementById("key_enableKeyBindingForUnselectTool");
             keyText.innerText = key;
             settingsObj.keyBindings.unselectTool.code = key;
         }
         break;
+
+        case "forSaving": {
+            keyText = document.getElementById("key_enableKeyBindingForSavingTopology");
+            keyText.innerText = key;
+            settingsObj.keyBindings.saveTopology.code = key;
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", "No such key setting "+forWhat+" has been found!");
+        }
     }
 
     hideSettingAlert();
@@ -214,10 +236,19 @@ function enableKeyBinding(forWhat) {
         }
         break;
 
-        default: {
+        case "default": {
            settingsObj.keyBindings.unselectTool.isEnabled = document.getElementById("enableKeyBindingForUnselectTool").checked;
         }
         break;
+
+        case "forSaving": {
+            settingsObj.keyBindings.saveTopology.isEnabled = document.getElementById("enableKeyBindingForSavingTopology").checked;
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", "No such key binding "+forWhat+" has been found!");
+        }
     }
 }
 
@@ -241,6 +272,10 @@ function enableCustomImage(forWhat) {
     console.log(settingsObj);
 }
 
+function changeCodeFormat(format) {
+    settingsObj.topologyConfiguration.codeFormat = format;
+}
+
 function saveSettings() {
     // Store a JSON object (convert to string first)
     localStorage.setItem("AristaLabRequestorAppSettings", JSON.stringify(settingsObj));
@@ -253,8 +288,15 @@ function loadSettings() {
     // Read and parse a JSON object
     const appSettings = localStorage.getItem("AristaLabRequestorAppSettings");
     if (appSettings) {
-        settingsObj = JSON.parse(appSettings);
-        console.log("App Settings:", settingsObj);
+        user_settingsObj = JSON.parse(appSettings);
+        if (user_settingsObj['version'] == undefined || user_settingsObj.version != settingsObj.version) {
+            localStorage.clear();
+            saveSettings();
+            loadSettings();
+            console.log("setting new local storage!");
+        } else {
+            settingsObj = user_settingsObj;
+        }
 
         // gui adjust according to app settings...
         Object.entries(settingsObj.keyBindings).forEach(([key, value])=> {
@@ -278,6 +320,14 @@ function loadSettings() {
                 }
             }
         });
+
+        if (settingsObj.topologyConfiguration.codeFormat == "Lab Request - SysTest") {
+            document.getElementById("requestSystest").checked = true;
+            document.getElementById("requestAct").checked = false;
+        } else {
+            document.getElementById("requestSystest").checked = false;
+            document.getElementById("requestAct").checked = true;
+        }
 
     } else {
         console.log("No app settings data found.");
