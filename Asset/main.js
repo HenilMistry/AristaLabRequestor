@@ -87,8 +87,6 @@ window.addEventListener("load",()=> {
 addEventListener("resize", () => {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-  
-    init();
 });
 
 // What to do when mousemove event is occurred 
@@ -214,39 +212,7 @@ function GenerateCode() {
         let output = "";
         selectTool("none");
 
-        output += "Probable location of the DUTS\n=============================\n";
-        Nodes.forEach((node) => {
-            if(node.NodeProperties instanceof Dut) {
-                output += node.getNodePortableLocation()+"\n";
-            }
-        });
-        output += "\n\n";
-
-        output += "MOVE DUTS\n=============\n";
-        Nodes.forEach((node) => {
-            if(node.NodeProperties instanceof Dut) {
-                output += node.getNodeMovement();
-            }
-        });
-        output += "\n\n";
-
-        output += "IXIA Ports Reserved\n==========================\n";
-        Connections.forEach((connection) => {
-            // Just for debugging...
-            // console.log(connection);
-            output += connection.connectionProperties.getIxiaPorts()+"\n";
-        });
-        output += "\n\n";
-
-        output += "REMOVE CONNECTIONS\n=====================\n**** REMOVE ALL EXISTING CONNECTIONS on above mentioned DUTs and IXIA ports ****\n\n";
-
-        output += "DUT-IXIA Connections:\n========================\n";
-        output += ConnectionHelper.getDutToIxiaConnections();
-        output += "\n\n";
-
-        output += "DUT-DUT Connections:\n========================\n";
-        output += ConnectionHelper.getDutToDutConnections();
-        output += "\n\n";
+        output = generateCode();
 
         openOutputModal(output);
     }
