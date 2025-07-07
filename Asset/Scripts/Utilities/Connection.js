@@ -74,6 +74,32 @@ class Connection {
     }
 
     /**
+     * This function help you get the used ports for the 
+     * selected node. Later you can use to generate YAML
+     * code for the ACT lab.
+     * 
+     * @param {*} forNodeA - Whether you want for node A or B
+     * @returns The list of used ports
+     */
+    getUsedPortsList(forNodeA = true) {
+        // create an empty list
+        let usedPorts = [];
+
+        // fetch all the ports to the list
+        this.ports.forEach((port) => {
+            // check if you're asked for node A port
+            if (forNodeA) {
+                usedPorts.push(port.identifierA);
+            } else { // if not, get node B port
+                usedPorts.push(port.identifierB);
+            }
+        });
+
+        // return the used ports list
+        return usedPorts;
+    }
+
+    /**
      * This function will assign the random ID to each and every object of type Connection ...
      * 
      * @returns Randome and Unique ID String...
