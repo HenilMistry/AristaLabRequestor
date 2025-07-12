@@ -63,6 +63,13 @@ function copyOutput() {
     }
 }
 
+/**
+ * This function returns the code for the configured topology.
+ * It fetches the current configured lab request format and
+ * will generate code accordingly.
+ * 
+ * @returns The lab request format for topology.
+ */
 function generateCode() {
     let output = "";
     if (settingsObj.topologyConfiguration.codeFormat == "Lab Request - SysTest") {
