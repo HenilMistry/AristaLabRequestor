@@ -5,6 +5,12 @@ class ConnectionHelper {
         this.connectionProperties = new Connection(nodeA, nodeB, portsList);
     }
 
+    getJSON() {
+        return {
+            connectionProperties: this.connectionProperties.getJSON()
+        };
+    }
+
     draw() {
         this.c.beginPath();
         this.c.setLineDash([]);
