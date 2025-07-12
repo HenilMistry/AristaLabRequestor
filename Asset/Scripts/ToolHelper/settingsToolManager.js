@@ -2,7 +2,7 @@ let settingsObj = {
     version: "v4.0",
     keyBindings: {
         chkBoxId: "enableKeyBindings",
-        isEnabled: false,
+        isEnabled: true,
         selectNodeTool: {
             isEnabled: false,
             code: "KeyN",
@@ -33,13 +33,12 @@ let settingsObj = {
             chkBoxId: "enableKeyBindingForUnselectTool",
             keyBindingId: "key_enableKeyBindingForUnselectTool"
         },
-        // TODO: Need to work on this...
-        // saveTopology: {
-        //     isEnabled: true,
-        //     code: "KeyQ",
-        //     chkBoxId: "enableKeyBindingForSavingTopology",
-        //     keyBindingId: "key_enableKeyBindingForSavingTopology"
-        // }
+        saveTopology: {
+            isEnabled: true,
+            code: "KeyQ",
+            chkBoxId: "enableKeyBindingForSaveTopology",
+            keyBindingId: "key_enableKeyBindingForSaveTopology"
+        }
     },
     canvasUtilities: {
         chkBoxId: "enableCanvasUtilities",
@@ -145,8 +144,8 @@ async function changeKeyBinding(forWhat) {
         }
         break;
 
-        case "forSaving": {
-            keyText = document.getElementById("key_enableKeyBindingForSavingTopology");
+        case "forSaveTopology": {
+            keyText = document.getElementById("key_enableKeyBindingForSaveTopology");
             keyText.innerText = key;
             settingsObj.keyBindings.saveTopology.code = key;
         }
@@ -241,8 +240,8 @@ function enableKeyBinding(forWhat) {
         }
         break;
 
-        case "forSaving": {
-            settingsObj.keyBindings.saveTopology.isEnabled = document.getElementById("enableKeyBindingForSavingTopology").checked;
+        case "forSaveTopology": {
+            settingsObj.keyBindings.saveTopology.isEnabled = document.getElementById("enableKeyBindingForSaveTopology").checked;
         }
         break;
 
@@ -337,18 +336,13 @@ function loadSettings() {
 window.addEventListener("keydown", (event)=>{
     console.log("Clicked : "+event.code);
     if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA" || settingsModalIsOpen) {
-        console.log("Ignoring keydown - Input is focused");
         return;  // Ignore keydown event
     }
 
     if (settingsObj.keyBindings.isEnabled) {
-        console.log("key binding is enabled.");
-
         switch(event.code) {
             case settingsObj.keyBindings.selectNodeTool.code: {
-                console.log("inside select node tool");
                 if (settingsObj.keyBindings.selectNodeTool.isEnabled) {
-                    console.log("key binding is enabled")
                     selectTool(Tools.NODE);
                 }
             }
@@ -378,6 +372,13 @@ window.addEventListener("keydown", (event)=>{
             case settingsObj.keyBindings.unselectTool.code: {
                 if (settingsObj.keyBindings.unselectTool.isEnabled) {
                     selectTool(null);
+                }
+            }
+            break;
+
+            case settingsObj.keyBindings.saveTopology.code: {
+                if(settingsObj.keyBindings.saveTopology.isEnabled) {
+                    openSaveTopologyModal();
                 }
             }
             break;
