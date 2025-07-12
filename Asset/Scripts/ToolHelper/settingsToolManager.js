@@ -276,12 +276,12 @@ function changeCodeFormat(format) {
     settingsObj.topologyConfiguration.codeFormat = format;
 }
 
-function saveSettings() {
+function saveSettings(message = "Settings has been saved for later use!") {
     // Store a JSON object (convert to string first)
     localStorage.setItem("AristaLabRequestorAppSettings", JSON.stringify(settingsObj));
     console.log("Data written to local storage.");
 
-    openAlertModal("Success!","Settings has been saved for later use!");
+    openAlertModal("Success!", message);
 }
 
 function loadSettings() {
@@ -291,7 +291,7 @@ function loadSettings() {
         user_settingsObj = JSON.parse(appSettings);
         if (user_settingsObj['version'] == undefined || user_settingsObj.version != settingsObj.version) {
             localStorage.clear();
-            saveSettings();
+            saveSettings("We've cleared your settings to ensure compatibility with the latest version of the app.");
             loadSettings();
             console.log("setting new local storage!");
         } else {
