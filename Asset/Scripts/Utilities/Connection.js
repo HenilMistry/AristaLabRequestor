@@ -15,6 +15,15 @@ class Connection {
         return this.#id;
     }
 
+    getJSON() {
+        return {
+            id: this.#id,
+            nodeA: this.nodeA.getJSON(),
+            nodeB: this.nodeB.getJSON(),
+            ports: this.ports.map(port => port.getJSON())
+        };
+    }
+
     /**
      * This function will return the connection string in below form...
      *      Ex. nodeAlias====================nodeAlias

@@ -16,6 +16,15 @@ class Port {
         return this.#id;
     }
 
+    getJSON() {
+        return {
+            id: this.#id,
+            identifierA: this.identifierA,
+            identifierB: this.identifierB,
+            speed: this.speed
+        };  
+    }
+
     toString() {
         return this.identifier + " - " + this.speed;
     }
