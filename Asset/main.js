@@ -80,6 +80,7 @@ function animationLoop() {
 }
 
 window.addEventListener("load",()=> {
+    loadSavedTopologies();
     loadSettings();
 });
 
