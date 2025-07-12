@@ -282,6 +282,20 @@
                   <button type="button" class="btn btn-primary" id="btn_enableKeyBindingForUnselectTool" onclick="changeKeyBinding()">Change</button>
                 </div>
               </div>
+              <div class="row align-items-center">
+                <div class="col">
+                  <input class="form-check-input mt-0" type="checkbox" value="" id="enableKeyBindingForSaveTopology" onclick="enableKeyBinding('forSaveTopology')">
+                </div>
+                <div class="col">
+                  <span class="input-group-text" id="text_enableKeyBindingForSaveTopology">Save Topology</span>
+                </div>
+                <div class="col">
+                  <span class="input-group-text" id="key_enableKeyBindingForSaveTopology">KeyQ</span>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-primary" id="btn_enableKeyBindingForSaveTopology" onclick="changeKeyBinding('forSaveTopology')">Change</button>
+                </div>
+              </div>
             </div>
 
             <h5>Canvas Utilities</h5>
@@ -328,7 +342,7 @@
             <h5>Topology Configuration</h5>
             <hr>
             <div class="container">
-              <div class="row align-items-center">
+              <div class="row align-items-center mb-3">
                 <div class="col">
                   Code Generation Format
                 </div>
@@ -349,6 +363,31 @@
                   </div>
                 </div>
               </div>
+
+              <div class="row align-items-center">
+                <div class="col">
+                  <select class="form-select" id="select_savedTopologies">
+                    <option selected>No Topology Saved</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-danger">
+                      <img src="./Asset/Icons/delete.png" alt="Delete" width="30px" title="Delete" id="deleteTopology">
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      <img src="./Asset/Icons/reload.png" alt="Load/Reload" width="30px" title="Load" id="loadTopology">
+                    </button>
+                    <button type="button" class="btn btn-success">
+                      <img src="./Asset/Icons/upload.png" alt="Upload" width="30px" title="Upload" id="uploadTopology">
+                    </button>
+                    <button type="button" class="btn btn-warning">
+                      <img src="./Asset/Icons/download.png" alt="Delete" width="30px" title="Download" id="downloadTopology">
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -359,6 +398,34 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" id="saveTopologyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="saveTopologyModalLabel">Save Topology</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="saveTopologyModal_closeIcon"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Name of topology</span>
+            <input type="text" class="form-control" placeholder="topology-a" id="saveTopologyModal_inputTopologyName">
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" id="saveTopologyModal_saveTopologyBtn">
+              Save Topology
+            </button>
+            <button type="button" class="btn btn-success" id="saveTopologyModal_saveAndDownloadBtn">
+              Save and Download
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="saveTopologyModal_closeButton">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
         
         <!-- Let them be one top of every other modal  -->
         <!-- Confirmation Modal -->
@@ -408,6 +475,9 @@
      <script src="./Asset/Scripts/Utilities/NodeIxia.js"></script>
      <script src="./Asset/Scripts/Utilities/Port.js"></script>
      <script src="./Asset/Scripts/Utilities/Connection.js"></script>
+
+     <!-- All Other Files Can be Included Anywhere you want -->
+      <script src="./Asset/Scripts/Other/topologySaver.js"></script>
 
     <!-- All Tool Helper -->
     <script src="./Asset/Scripts/ToolHelper/toolManager.js"></script>
