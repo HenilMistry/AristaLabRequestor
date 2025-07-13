@@ -29,9 +29,13 @@ function loadSavedTopologies() {
         let temp_savedToplogies = JSON.parse(local_savedTopologies);
         savedTopologies = temp_savedToplogies;
         select_savedTopologies.innerHTML = "";
-        Object.entries(temp_savedToplogies).forEach(([key, value])=> {
-            select_savedTopologies.innerHTML += `<option>${key}</option>`;
-        });
+        if (Object.keys(savedTopologies).length == 0) {
+            select_savedTopologies.innerHTML += `<option selected>No Topology Selected</option>`;
+        } else {
+            Object.entries(temp_savedToplogies).forEach(([key, value])=> {
+                select_savedTopologies.innerHTML += `<option>${key}</option>`;
+            });
+        }
     }
 }
 
@@ -52,6 +56,24 @@ function downloadTopology(filename, topology) {
     URL.revokeObjectURL(url);
 }
 
+function checkIfTopologyExists(topology_name) {
+    // check if the topology exists in backend...
+    let valid_topology = false;
+    Object.entries(savedTopologies).forEach(([key, value])=> {
+        if (topology_name == key) {
+            valid_topology = true;
+            return;
+        }
+    });
+
+    // throw a message and exit if it's an invalid topology name...
+    if (valid_topology==false || topology_name=="" || topology_name.trim() == "") {
+        openAlertModal("Alert!", `No such topology : '${topology_name}' is found!`);
+        return false;
+    }
+    return true;
+}
+
 function saveTopology(download = false) {
     // check if the topology name is not given...
     if (saveTopologyModal_inputTopologyName.value == "" || saveTopologyModal_inputTopologyName.value.trim() == "") {
@@ -69,6 +91,9 @@ function saveTopology(download = false) {
     Connections.forEach((conn) => {
         topology.connections.push(conn.getJSON());
     });
+    if (Object.keys(savedTopologies).length == 0) {
+       select_savedTopologies.innerHTML = ""; 
+    }
     select_savedTopologies.innerHTML += `<option>${saveTopologyModal_inputTopologyName.value}</option>`;
 
     // save to the local storage...
@@ -78,6 +103,8 @@ function saveTopology(download = false) {
     // download the topology, if asked
     if (download == true) {
         downloadTopology(saveTopologyModal_inputTopologyName.value, topology);
+    } else {
+        openAlertModal("Success!", "Topology has been saved successfully! Check settings for more!");
     }
 }
 
@@ -94,3 +121,39 @@ saveTopologyModal_saveTopologyBtn.addEventListener("click", saveTopology);
 saveTopologyModal_saveAndDownloadBtn.addEventListener("click", () => {
     saveTopology(true);
 })
+
+document.getElementById("deleteTopology").addEventListener("click", async () => {
+    // get the name of the topology
+    let topology_name = select_savedTopologies.value;
+
+    // check if the topology exists in backend...
+    if (checkIfTopologyExists(topology_name) == false) {
+        return;
+    }
+
+    // if it's a valid topology, delete it after confirmation...
+    let confirmation = await openConfirmationModal("Are you sure?", "You really want to delete this topology ?");
+    if (confirmation == true) {
+        delete savedTopologies[topology_name];
+        // store the updated value to the backend...
+        saveTopologies();
+
+        // reflect the changes into front-end...
+        loadSavedTopologies();
+    } else {
+        return;
+    }
+});
+
+document.getElementById("downloadTopology").addEventListener("click", () => {
+    // get the name of the topology
+    let topology_name = select_savedTopologies.value;
+
+    // check if the topology exists in backend...
+    if (checkIfTopologyExists(topology_name) == false) {
+        return;
+    }
+
+    // if it's a valid topology, download it...
+    downloadTopology(topology_name, savedTopologies[topology_name]);
+});
