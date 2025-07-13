@@ -232,4 +232,6 @@ document.getElementById("loadTopology").addEventListener("click", () => {
         Connections.push(new_connection);
         
     });
+
+    openAlertModal("Success", "Topology has been loaded!");
 });
