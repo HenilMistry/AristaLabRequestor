@@ -235,3 +235,22 @@ document.getElementById("loadTopology").addEventListener("click", () => {
 
     openAlertModal("Success", "Topology has been loaded!");
 });
+
+document.getElementById("uploadTopology").addEventListener("click", () => {
+    let fileInput = document.getElementById("fileInputForTopology");
+    fileInput.click();
+    
+    fileInput.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const topology = JSON.parse(e.target.result);
+            savedTopologies[file.name] = topology;
+            saveTopologies();
+            loadSavedTopologies();
+        };
+
+        reader.readAsText(file);
+    });
+});
