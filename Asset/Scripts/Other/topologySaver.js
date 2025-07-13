@@ -157,3 +157,79 @@ document.getElementById("downloadTopology").addEventListener("click", () => {
     // if it's a valid topology, download it...
     downloadTopology(topology_name, savedTopologies[topology_name]);
 });
+
+document.getElementById("loadTopology").addEventListener("click", () => {
+    // get the name of the topology
+    let topology_name = select_savedTopologies.value;
+
+    // check if the topology exists in backend...
+    if (checkIfTopologyExists(topology_name) == false) {
+        return;
+    }
+
+    // load the topology...
+
+    // before load, empty all the connections and nodes...
+    Connections = [];
+    Nodes = [];
+
+    // get the topology configuration JSON...
+    let topology = savedTopologies[topology_name];
+    let temp_node_ids = {};
+
+    // loop through connections...
+    topology.connections.forEach((conn) => {
+        let nodeA = conn.connectionProperties.nodeA;
+        let nodeB = conn.connectionProperties.nodeB;
+        let ports = conn.connectionProperties.ports;
+
+        let properties_nodeA = nodeA.nodeProperties;
+        let properties_nodeB = nodeB.nodeProperties;
+
+        let new_node_prop_a, new_node_prop_b;
+        let nodeA_exist = false, nodeB_exist = false;
+
+        if (temp_node_ids[properties_nodeA.id] == null) {
+            if (properties_nodeA.movement == null) {
+                new_node_prop_a = new Ixia(properties_nodeA.alias, properties_nodeA.location);
+            } else {
+                new_node_prop_a = new Dut(properties_nodeA.alias, properties_nodeA.location, properties_nodeA.movement);
+            }
+            temp_node_ids[properties_nodeA.id] = new Node(nodeA.label, nodeA.x, nodeA.y, nodeA.radius, nodeA.color, c);
+            temp_node_ids[properties_nodeA.id].NodeProperties = new_node_prop_a;
+        } else {
+            new_node_prop_a = temp_node_ids[properties_nodeA.id];
+            nodeA_exist = true;
+        }
+
+        if (temp_node_ids[properties_nodeB.id] == null) {
+            if (properties_nodeB.movement == null) {
+                new_node_prop_b = new Ixia(properties_nodeB.alias, properties_nodeB.location);
+            } else {
+                new_node_prop_b = new Dut(properties_nodeB .alias, properties_nodeB.location, properties_nodeB.movement);
+            }
+            temp_node_ids[properties_nodeB.id] = new Node(nodeB.label, nodeB.x, nodeB.y, nodeB.radius, nodeB.color, c);
+            temp_node_ids[properties_nodeB.id].NodeProperties = new_node_prop_b;
+        } else {
+            new_node_prop_b = temp_node_ids[properties_nodeB.id];
+            nodeB_exist = true;
+        }
+
+        if (nodeA_exist == false) {
+            Nodes.push(temp_node_ids[properties_nodeA.id]);
+        }
+
+        if (nodeB_exist == false) {
+            Nodes.push(temp_node_ids[properties_nodeB.id]);
+        }
+
+        let new_ports = [];
+        ports.forEach((port) => {
+            new_ports.push(new Port(port.identifierA, port.identifierB, port.speed));
+        }); 
+
+        let new_connection = new ConnectionHelper(temp_node_ids[properties_nodeA.id], temp_node_ids[properties_nodeB.id], c, new_ports);
+        Connections.push(new_connection);
+        
+    });
+});
