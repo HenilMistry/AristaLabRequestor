@@ -15,6 +15,17 @@ class Node {
         this.NodeProperties;
         this.selected = false;
     }
+
+    getJSON() {
+        return {
+            label: this.label,
+            x: this.x,
+            y: this.y,
+            radius: this.radius,
+            color: this.color,
+            nodeProperties: this.NodeProperties.getJSON()
+        };  
+    }
     
     draw() {
         // basic start point of drawing...

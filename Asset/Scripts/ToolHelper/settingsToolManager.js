@@ -1,7 +1,8 @@
 let settingsObj = {
+    version: "v4.0",
     keyBindings: {
         chkBoxId: "enableKeyBindings",
-        isEnabled: false,
+        isEnabled: true,
         selectNodeTool: {
             isEnabled: false,
             code: "KeyN",
@@ -31,6 +32,12 @@ let settingsObj = {
             code: "Escape",
             chkBoxId: "enableKeyBindingForUnselectTool",
             keyBindingId: "key_enableKeyBindingForUnselectTool"
+        },
+        saveTopology: {
+            isEnabled: true,
+            code: "KeyQ",
+            chkBoxId: "enableKeyBindingForSaveTopology",
+            keyBindingId: "key_enableKeyBindingForSaveTopology"
         }
     },
     canvasUtilities: {
@@ -48,6 +55,9 @@ let settingsObj = {
             chkBoxId: "enableCustomIxiaImage",
             imgPreviewId: "img_ixia"
         }
+    },
+    topologyConfiguration: {
+        codeFormat: "Lab Request - SysTest"
     }
 }
 
@@ -127,12 +137,23 @@ async function changeKeyBinding(forWhat) {
         }
         break;
 
-        default: {
+        case "default": {
             keyText = document.getElementById("key_enableKeyBindingForUnselectTool");
             keyText.innerText = key;
             settingsObj.keyBindings.unselectTool.code = key;
         }
         break;
+
+        case "forSaveTopology": {
+            keyText = document.getElementById("key_enableKeyBindingForSaveTopology");
+            keyText.innerText = key;
+            settingsObj.keyBindings.saveTopology.code = key;
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", "No such key setting "+forWhat+" has been found!");
+        }
     }
 
     hideSettingAlert();
@@ -214,10 +235,19 @@ function enableKeyBinding(forWhat) {
         }
         break;
 
-        default: {
+        case "default": {
            settingsObj.keyBindings.unselectTool.isEnabled = document.getElementById("enableKeyBindingForUnselectTool").checked;
         }
         break;
+
+        case "forSaveTopology": {
+            settingsObj.keyBindings.saveTopology.isEnabled = document.getElementById("enableKeyBindingForSaveTopology").checked;
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", "No such key binding "+forWhat+" has been found!");
+        }
     }
 }
 
@@ -241,20 +271,31 @@ function enableCustomImage(forWhat) {
     console.log(settingsObj);
 }
 
-function saveSettings() {
+function changeCodeFormat(format) {
+    settingsObj.topologyConfiguration.codeFormat = format;
+}
+
+function saveSettings(message = "Settings has been saved for later use!") {
     // Store a JSON object (convert to string first)
     localStorage.setItem("AristaLabRequestorAppSettings", JSON.stringify(settingsObj));
     console.log("Data written to local storage.");
 
-    openAlertModal("Success!","Settings has been saved for later use!");
+    openAlertModal("Success!", message);
 }
 
 function loadSettings() {
     // Read and parse a JSON object
     const appSettings = localStorage.getItem("AristaLabRequestorAppSettings");
     if (appSettings) {
-        settingsObj = JSON.parse(appSettings);
-        console.log("App Settings:", settingsObj);
+        user_settingsObj = JSON.parse(appSettings);
+        if (user_settingsObj['version'] == undefined || user_settingsObj.version != settingsObj.version) {
+            localStorage.clear();
+            saveSettings("We've cleared your settings to ensure compatibility with the latest version of the app.");
+            loadSettings();
+            console.log("setting new local storage!");
+        } else {
+            settingsObj = user_settingsObj;
+        }
 
         // gui adjust according to app settings...
         Object.entries(settingsObj.keyBindings).forEach(([key, value])=> {
@@ -279,6 +320,14 @@ function loadSettings() {
             }
         });
 
+        if (settingsObj.topologyConfiguration.codeFormat == "Lab Request - SysTest") {
+            document.getElementById("requestSystest").checked = true;
+            document.getElementById("requestAct").checked = false;
+        } else {
+            document.getElementById("requestSystest").checked = false;
+            document.getElementById("requestAct").checked = true;
+        }
+
     } else {
         console.log("No app settings data found.");
     }
@@ -287,18 +336,13 @@ function loadSettings() {
 window.addEventListener("keydown", (event)=>{
     console.log("Clicked : "+event.code);
     if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA" || settingsModalIsOpen) {
-        console.log("Ignoring keydown - Input is focused");
         return;  // Ignore keydown event
     }
 
     if (settingsObj.keyBindings.isEnabled) {
-        console.log("key binding is enabled.");
-
         switch(event.code) {
             case settingsObj.keyBindings.selectNodeTool.code: {
-                console.log("inside select node tool");
                 if (settingsObj.keyBindings.selectNodeTool.isEnabled) {
-                    console.log("key binding is enabled")
                     selectTool(Tools.NODE);
                 }
             }
@@ -328,6 +372,13 @@ window.addEventListener("keydown", (event)=>{
             case settingsObj.keyBindings.unselectTool.code: {
                 if (settingsObj.keyBindings.unselectTool.isEnabled) {
                     selectTool(null);
+                }
+            }
+            break;
+
+            case settingsObj.keyBindings.saveTopology.code: {
+                if(settingsObj.keyBindings.saveTopology.isEnabled) {
+                    openSaveTopologyModal();
                 }
             }
             break;

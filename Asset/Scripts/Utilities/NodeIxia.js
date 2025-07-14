@@ -16,6 +16,14 @@ class Ixia {
         return this.#id;
     }
 
+    getJSON() {
+        return {
+            id: this.#id,
+            alias: this.alias,
+            location: this.location
+        };
+    }
+
     /**
      * This function will assign the random ID to each and every object of type Ixia
      * 

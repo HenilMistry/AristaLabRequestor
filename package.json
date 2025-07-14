@@ -1,0 +1,29 @@
+{
+  "name": "arista-lab-requestor",
+  "version": "4.0.0",
+  "description": "The lab requestor for Arista",
+  "main": "index.html",
+  "scripts": {
+    "start-server": "http-server -p 8080",
+    "test": "concurrently \"npm run start-server\" \"cypress run\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenilMistry/AristaLabRequestor.git"
+  },
+  "keywords": [
+    "html",
+    "js",
+    "css"
+  ],
+  "author": "Henil Rakeshbhai Mistry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HenilMistry/AristaLabRequestor/issues"
+  },
+  "homepage": "https://github.com/HenilMistry/AristaLabRequestor#readme",
+  "devDependencies": {
+    "cypress": "^14.5.0",
+    "http-server": "^14.1.1"
+  }
+}

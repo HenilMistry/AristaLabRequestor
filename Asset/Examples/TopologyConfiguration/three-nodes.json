@@ -1,0 +1,89 @@
+{
+  "version": "v1.0",
+  "appVersion": "v4.0",
+  "connections": [
+    {
+      "connectionProperties": {
+        "id": "md1ck4alhvc41d79",
+        "nodeA": {
+          "label": "node-one",
+          "x": 150,
+          "y": 309,
+          "radius": 20,
+          "color": "Red",
+          "nodeProperties": {
+            "id": "md1cjnkkvocbkbg1",
+            "alias": "node-one",
+            "location": "surat",
+            "movement": "blr"
+          }
+        },
+        "nodeB": {
+          "label": "node-two",
+          "x": 683,
+          "y": 401,
+          "radius": 20,
+          "color": "Red",
+          "nodeProperties": {
+            "id": "md1cjrxoqqx550d2",
+            "alias": "node-two",
+            "location": "blr"
+          }
+        },
+        "ports": [
+          {
+            "id": "md1cjyrcag9vtsqn",
+            "identifierA": "eth1",
+            "identifierB": "eth1",
+            "speed": "1G"
+          },
+          {
+            "id": "md1ck3lsg83h3gdf",
+            "identifierA": "eth2",
+            "identifierB": "eth2",
+            "speed": "10G"
+          }
+        ]
+      }
+    },
+    {
+      "connectionProperties": {
+        "id": "md1ckp9x1npf94tp",
+        "nodeA": {
+          "label": "node-one",
+          "x": 150,
+          "y": 309,
+          "radius": 20,
+          "color": "Red",
+          "nodeProperties": {
+            "id": "md1cjnkkvocbkbg1",
+            "alias": "node-one",
+            "location": "surat",
+            "movement": "blr"
+          }
+        },
+        "nodeB": {
+          "label": "node-three",
+          "x": 376,
+          "y": 605,
+          "radius": 20,
+          "color": "Red",
+          "nodeProperties": {
+            "id": "md1ckc4iycyiahj2",
+            "alias": "node-three",
+            "location": "blr",
+            "movement": "DO NOT MOVE"
+          }
+        },
+        "ports": [
+          {
+            "id": "md1ckoqz3ojq9gni",
+            "identifierA": "eth3",
+            "identifierB": "eth1",
+            "speed": "10G"
+          }
+        ]
+      }
+    }
+  ]
+}

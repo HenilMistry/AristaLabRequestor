@@ -1,0 +1,7 @@
+node_modules
+cypress/e2e/1-*
+cypress/e2e/2-*
+**/videos/**
+**/screenshots/**
+Resources
+**__pycache__**

@@ -1,0 +1,90 @@
+LabRequestor - (v4.0)
+============================================================
+Date of Release : 14th Jul. 2025
+
+
+Overview - (v4.0)
+============================================================
+This release is focused on the user experience and enhancem-
+ents. Mainly this release includes the Quality of life chan-
+ges including ability to save the configured topology, downl-
+oad the existing topologies and load them whenever needed.
+This relase has also been focused for architectural changes,
+It has included Cypress for regurous testing and Continuos
+Integration of new changes however, less test cases have be-
+en included for this release but it will be included in fu-
+ture releases.
+
+
+What's New
+============================================================
+Below are the features added in this release.
+- Tab Icon, App Icon for Browser Tab
+- User Manual Redirection Button
+- Report An Issue Redirection Button
+- Topology Configuration Section in Setting menu
+    - Option to save topology
+    - Option to delete existing topologies
+    - Option to load existing topologies
+    - Option to upload topology files
+    - Option to download topology files
+- Code generation option for ACT-Lab
+    - Option to generate YAML File for ACT Labs
+    - Option to choose code generation format
+        - ACT-LAB YAML File Code OR 
+        - Sys-Test Lab Rquest Format
+
+
+Improvements
+============================================================
+Below are the improvements added as new features.
+- Scalability enhancements
+- Usability enhancements
+- Ease of navigation enhancements
+- GUI enhancements
+- User experience enhancements
+- QoL Changes
+
+Below are the feature requests that has been implemented as of
+this release.
+- (#22) Request for feature - To get the yaml code for ACT 
+        topologies
+- (#23) Request for feature - Save topologies
+
+
+Bug Fixes
+============================================================
+- (#20) Extra/Invalid connection under Active connection for
+        "Node Configuration" modal
+- (#21) Extra/Invalid active ports under Active Connection 
+        for "Connection Configuration" modal
+- (#7) When you "Inspect" the page, the configured topology 
+        disappers.
+
+
+Known Issues
+============================================================
+- None as of now
+
+
+Upgrade Instructions
+============================================================
+You can use github page for accesing the latest update. For
+those who are using in their own device, they can go for re-
+lease notes and from there they can access the zipped code.
+
+For contributors, they can pull the changes from "main" bra-
+nch.
+
+For Arista Networks,
+If accesing from within office networks, they can use 
+"go/lab-requestor" from within their web browsers.
+
+
+Support
+============================================================
+Please use github Discussion page for bug reporting, general
+chat, discussiona and any off-topic conversation.
+
+For anyother support, reach out to me at 
+henilmistry74496@gmail.com

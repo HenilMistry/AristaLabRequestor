@@ -1,0 +1,33 @@
+veos:
+  username: cvpadmin
+  password: cvp123!
+  version: 4.29.4M
+cvp:
+  username: root
+  password: cvproot
+  version: 2023.1.1
+  instance: singlenode
+nodes:
+  - cvp:
+      ip_addr: 192.168.0.1
+      node_type: cvp
+      auto_configuration: true
+  - Spine1:
+      ip_addr: 192.168.0.2
+      node_type: veos
+      ports:
+        - Ethernet1
+        - Ethernet2
+  - Spine2:
+      ip_addr: 192.168.0.3
+      node_type: veos
+      ports:
+        - Ethernet1
+        - Ethernet2
+links:
+  - connection:
+      - Spine1:Ethernet1
+      - Spine2:Ethernet1
+  - connection:
+      - Spine1:Ethernet2
+      - Spine2:Ethernet2

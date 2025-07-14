@@ -24,41 +24,91 @@ function openConnectionsConfigurationModal() {
     connectionsConfig_LblIdentifierB.innerText = "Port Identifier for : "+secondNode.NodeProperties.alias;
 }
 
-/**
- * Function to close the connections configuration modal.
- */
-async function closeConnectionsConfigurationModal() {
-    if(ports.length == 0) {
-        let result = await openConfirmationModal("Are you sure?","No ports are configured in this connection. Are you sure you want to proceed ?");
-        if (!result) {
-            return;
-        }
-    } else {
-        // check if there are ports left to save in selected connection...
-        if (ports.length > 0 && selectedConnection != null) {
-            connectionsConfig_portIdentifierA.value = "";
-            connectionsConfig_portIdentifierB.value = "";
-            connectionsConfig_bandWidth.value = "";
-            connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
-            connectionsConfig_warningTxt.style.display = "block";
-            ports.forEach((port) => {
-                const DivInHTML = document.getElementById(port.getID());
-                DivInHTML.remove();
-            });
-            selectedConnection.ports = ports;
-            selectedConnection = null;
-        }
-        ports = [];
-    }
-
+function hideConnnectionsConfigurationModal() {
     connectionsConfigurationModal.hide();
+    ports = [];
     if (click %2 == 0) {
         click = 0;
         firstNode = null;
         secondNode = null;
     }
-    // Just for debugging ...
-    // console.log(Connections);
+}
+
+function cleanUpConnectionsConfigModal() {
+    connectionsConfig_portIdentifierA.value = "";
+    connectionsConfig_portIdentifierB.value = "";
+    connectionsConfig_bandWidth.value = "";
+    connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
+    connectionsConfig_warningTxt.style.display = "block";
+    if (ports.length > 0) {
+        ports.forEach((port) => {
+            const DivInHTML = document.getElementById(port.getID());
+            DivInHTML.remove();
+        });
+    }
+}
+
+/**
+ * Function to close the connections configuration modal.
+ */
+async function closeConnectionsConfigurationModal() {
+    if(ports.length == 0) {
+        // Case One : When connections are being edited from Node Manager modal
+        if (selectedConnection != null) {
+            let confirmation = await openConfirmationModal("Are you sure?", "All the ports are deleted. The connection will be removed. You want to proceed?");
+            if (confirmation) {
+                let idOfConnectionToBeDeleted = selectedConnection.getID();
+                let index = -1;
+                for (let i=0; i<Connections.length; i++) {
+                    if (Connections[i].connectionProperties.getID() == idOfConnectionToBeDeleted) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != -1) {
+                    Connections.splice(index, 1);
+                }
+                updateNodeInfoInNodeManager();
+                renderConnnections();
+                hideConnnectionsConfigurationModal();
+            } else {
+                return;
+            }
+        }
+        // Case Two : When connections are being added from the Connection Tool
+        else if (selectedConnection == null) {
+            let confirmation = await openConfirmationModal("Are you sure?","No ports are configured in this connection. Are you sure you want to proceed ?");
+            if (!confirmation) {
+                return;
+            } else {
+                hideConnnectionsConfigurationModal();
+            }
+        }
+    } else {
+        // check if there are ports "left to save" in selected connection...
+
+        /**
+         * This if condition will only be executed when the Connection Configuration
+         * modal is triggered using Node Configuration modal and user is closing the
+         * connection configuration modal without configuring them.
+         * 
+         * This will act as a error prevention code. Mendatory to have this LOC.
+         **/
+        if (selectedConnection != null) {
+            cleanUpConnectionsConfigModal();
+            selectedConnection.ports = ports;
+            selectedConnection = null;
+            hideConnnectionsConfigurationModal();
+        } else if (selectedConnection == null) {
+            let confirmation = await openConfirmationModal("Are you sure?", "You have some unconfigured ports. You really don't want to configure the connection?")
+            if (confirmation) {
+                cleanUpConnectionsConfigModal();
+                hideConnnectionsConfigurationModal();
+            } else {
+                return;
+            }
+        }
+    }
 }
 
 /**
@@ -71,16 +121,8 @@ function configureConnection() {
         return;
     }
 
-    // Below LOC will make sure that older connections will be removed ...
-    connectionsConfig_portIdentifierA.value = "";
-    connectionsConfig_portIdentifierB.value = "";
-    connectionsConfig_bandWidth.value = "";
-    connectionsConfig_warningTxt = document.getElementById('connectionsConfig_warningTxt');
-    connectionsConfig_warningTxt.style.display = "block";
-    ports.forEach((port) => {
-        const DivInHTML = document.getElementById(port.getID());
-        DivInHTML.remove();
-    });
+    // Below LOC will make sure that existing GUI will be removed ...
+    cleanUpConnectionsConfigModal();
 
     // Below LOC is Logical Part for connection ...
     if (selectedConnection == null) {
@@ -90,7 +132,8 @@ function configureConnection() {
         selectedConnection.ports = ports;
         selectedConnection = null;
     }
-    closeConnectionsConfigurationModal();
+
+    hideConnnectionsConfigurationModal();
 }
 
 /**

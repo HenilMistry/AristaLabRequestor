@@ -29,9 +29,7 @@ function updateNodeInfoInNodeManager() {
     nodeManagerModal_nodeInfo.innerHTML = "Type : "+((selectedNode.NodeProperties instanceof Dut)?("NODE-DUT"):("NODE-IXIA"))+" <br> Movement : "+((selectedNode.getNodeMovement()=="")?("N/A"):(selectedNode.getNodeMovement()))+" <br> Active Connections : "+activeConnections.length;
 }
 
-function openNodeManagerModal() {
-    // Below LOC will check for the active connections of the selected node...
-    nodeManagerModal_LblNodeIdentifier.innerText = "Node Management for : "+selectedNode.NodeProperties.alias;
+function renderConnnections() {
     let activeConnections = [];
     Connections.forEach((conn) => {
         // either of the end is selected node...
@@ -41,8 +39,6 @@ function openNodeManagerModal() {
         }
     });
 
-    // Below LOC will render the connections to HTML...
-    updateNodeInfoInNodeManager();
     let nodeManagerModal_finalConnections = "";
     activeConnections.forEach((activeConn) => {
         let id = activeConn.connectionProperties.getID();
@@ -55,6 +51,15 @@ function openNodeManagerModal() {
         nodeManagerModal_finalConnections += '<div class="input-group mb-3" id="'+id+'"> <span class="input-group-text">'+activeConn.connectionProperties.toString()+'</span> <button class="btn btn-outline-primary" type="button" id="'+id+'" onclick="editConnection(\''+id+'\')">Edit</button> <button class="btn btn-outline-danger" type="button" id="'+id+'" onclick="deleteConnection(\''+id+'\')">Delete</button>  </div>';
     });
     nodeManagerModal_connections.innerHTML = nodeManagerModal_finalConnections;
+}
+
+function openNodeManagerModal() {
+    // Below LOC will check for the active connections of the selected node...
+    nodeManagerModal_LblNodeIdentifier.innerText = "Node Management for : "+selectedNode.NodeProperties.alias;
+
+    // Below LOC will render the connections to HTML...
+    updateNodeInfoInNodeManager();
+    renderConnnections();
 
     // Below LOC will show the node manager modal...
     nodeManagerModal.show();
@@ -115,19 +120,21 @@ async function deleteConnection(connectionID) {
     let index = -1;
     for(let i=0; i<Connections.length; i++) {
         if (Connections[i].connectionProperties.getID() == connectionID) {
-            let result = await openConfirmationModal("Are you sure?", "The connection will be removed and all the ports too!");
-            if (result) {
-                index = i;
-            }
+            index = i;
             break;
         }
     }
 
     // Delete the connection...
     if (index != -1) {
-        Connections.splice(index,1);
-        const DivInHTML = document.getElementById(connectionID);
-        DivInHTML.remove();
-        updateNodeInfoInNodeManager();
+        let result = await openConfirmationModal("Are you sure?", "The connection will be removed and all the ports too!");
+        if (result) {
+            Connections.splice(index,1);
+            const DivInHTML = document.getElementById(connectionID);
+            DivInHTML.remove();
+            updateNodeInfoInNodeManager();   
+        }
+    } else {
+        openAlertModal("Error Occurred!", "The connection that you're trying to delete is not found in backend.");
     }
 }

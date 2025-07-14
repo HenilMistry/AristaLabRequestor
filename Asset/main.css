@@ -17,3 +17,7 @@ canvas {
     left: 0;
     position: absolute;
 }
+
+.dropdown-menu.show {
+  display: block !important;
+}
