@@ -13,14 +13,30 @@ const saveTopologyModal_saveAndDownloadBtn = document.getElementById("saveTopolo
 const saveTopologyModal_closeButton = document.getElementById("saveTopologyModal_closeButton");
 const select_savedTopologies = document.getElementById("select_savedTopologies");
 
+const uploadTopologyModal = new bootstrap.Modal("#uploadTopologyModal");
+const uploadTopologyModal_closeIcon = document.getElementById("uploadTopologyModal_closeIcon");
+const uploadTopologyModal_inputType = document.getElementById("uploadTopologyModal_inputType");
+const uploadTopologyModal_uploadTopology = document.getElementById("uploadTopologyModal_uploadTopology");
+const uploadTopologyModal_closeButton = document.getElementById("uploadTopologyModal_closeButton");
+const fileInputForTopology = document.getElementById("fileInputForTopology");
+
 let savedTopologies = {};
+let uploadType = "json";
 
 function openSaveTopologyModal() {
     saveTopologyModal.show();
 }
 
+function openUploadTopologyModal() {
+    uploadTopologyModal.show();
+}
+
 function closeSaveTopologyModal() {
     saveTopologyModal.hide();
+}
+
+function closeUploadTopologyModal() {
+    uploadTopologyModal.hide();
 }
 
 function loadSavedTopologies() {
@@ -114,6 +130,43 @@ saveTopologyModal_closeButton.addEventListener("click", () => {
 
 saveTopologyModal_closeIcon.addEventListener("click", () => {
     closeSaveTopologyModal();
+})
+
+uploadTopologyModal_closeButton.addEventListener("click", () => {
+    closeUploadTopologyModal();
+})
+
+uploadTopologyModal_closeIcon.addEventListener("click", () => {
+    closeUploadTopologyModal();
+})
+
+uploadTopologyModal_inputType.addEventListener("change", function () {
+    const index = this.selectedIndex;
+    const text = this.options[index].text;
+    switch(text) {
+        case "App Configured JSON": {
+            fileInputForTopology.accept = '.json';
+            uploadType = "json";
+        }
+        break;
+
+        case "Existing YAML": {
+            fileInputForTopology.accept = '.yml';
+            uploadType = "yml";
+        }
+        break;
+
+        case "Existing SysTest-LabRequest": {
+            fileInputForTopology.accept = '.text';
+            uploadType = "text";
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", `No such upload option : "${text}" available!`);
+        }
+        break;
+    }
 })
 
 saveTopologyModal_saveTopologyBtn.addEventListener("click", saveTopology);
@@ -237,20 +290,42 @@ document.getElementById("loadTopology").addEventListener("click", () => {
 });
 
 document.getElementById("uploadTopology").addEventListener("click", () => {
-    let fileInput = document.getElementById("fileInputForTopology");
-    fileInput.click();
-    
-    fileInput.addEventListener("change", function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
+    openUploadTopologyModal();
+});
 
-        reader.onload = function (e) {
-            const topology = JSON.parse(e.target.result);
-            savedTopologies[file.name] = topology;
-            saveTopologies();
-            loadSavedTopologies();
-        };
+fileInputForTopology.addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
 
-        reader.readAsText(file);
-    });
+    reader.onload = function (e) {
+        let topology;
+        switch(uploadType) {
+            case "json": {
+                topology = JSON.parse(e.target.result);
+            } break;
+
+            case "yml": {
+                topology = jsyaml.load(e.target.result);
+                console.log(topology);
+            } break;
+
+            case "text": {
+                // TODO: Implement this
+            } break;
+
+            default: {
+                openAlertModal("Error!", "Unknown file type found while parsing!")
+            } break;
+        }
+        savedTopologies[file.name] = topology;
+        saveTopologies();
+        loadSavedTopologies();
+        openAlertModal("Success!", "File has been uploaded!");
+    };
+
+    reader.readAsText(file);
+});
+
+uploadTopologyModal_uploadTopology.addEventListener("click", () => {
+    fileInputForTopology.click();
 });
