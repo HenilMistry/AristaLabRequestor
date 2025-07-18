@@ -379,7 +379,6 @@
                       <img src="./Asset/Icons/reload.png" alt="Load/Reload" width="30px" title="Load" id="loadTopology">
                     </button>
                     <button type="button" class="btn btn-success">
-                      <input type="file" id="fileInputForTopology" style="display: none" accept=".json">
                       <img src="./Asset/Icons/upload.png" alt="Upload" width="30px" title="Upload" id="uploadTopology">
                     </button>
                     <button type="button" class="btn btn-warning">
@@ -423,6 +422,32 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="saveTopologyModal_closeButton">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="uploadTopologyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Upload Topology</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="uploadTopologyModal_closeIcon"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Type of file</span>
+            <select class="form-select" aria-label="Default select example" id="uploadTopologyModal_inputType">
+              <option selected>App Configured JSON</option>
+              <option>Existing YAML</option>
+              <option>Existing SysTest-LabRequest</option>
+            </select>
+          </div>
+          <input type="file" id="fileInputForTopology" style="display: none" accept=".json">
+          <button type="button" class="btn btn-primary" id="uploadTopologyModal_uploadTopology">Upload Topology</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="uploadTopologyModal_closeButton">Close</button>
         </div>
       </div>
     </div>
