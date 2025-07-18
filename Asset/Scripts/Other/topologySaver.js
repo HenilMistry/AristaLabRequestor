@@ -13,14 +13,30 @@ const saveTopologyModal_saveAndDownloadBtn = document.getElementById("saveTopolo
 const saveTopologyModal_closeButton = document.getElementById("saveTopologyModal_closeButton");
 const select_savedTopologies = document.getElementById("select_savedTopologies");
 
+const uploadTopologyModal = new bootstrap.Modal("#uploadTopologyModal");
+const uploadTopologyModal_closeIcon = document.getElementById("uploadTopologyModal_closeIcon");
+const uploadTopologyModal_inputType = document.getElementById("uploadTopologyModal_inputType");
+const uploadTopologyModal_uploadTopology = document.getElementById("uploadTopologyModal_uploadTopology");
+const uploadTopologyModal_closeButton = document.getElementById("uploadTopologyModal_closeButton");
+const fileInputForTopology = document.getElementById("fileInputForTopology");
+
 let savedTopologies = {};
+let uploadType = "json";
 
 function openSaveTopologyModal() {
     saveTopologyModal.show();
 }
 
+function openUploadTopologyModal() {
+    uploadTopologyModal.show();
+}
+
 function closeSaveTopologyModal() {
     saveTopologyModal.hide();
+}
+
+function closeUploadTopologyModal() {
+    uploadTopologyModal.hide();
 }
 
 function loadSavedTopologies() {
@@ -37,6 +53,114 @@ function loadSavedTopologies() {
             });
         }
     }
+}
+
+function loadSavedJSON(topology_name) {
+    // get the topology configuration JSON...
+    let topology = savedTopologies[topology_name];
+    let temp_node_ids = {};
+
+    // loop through connections...
+    topology.connections.forEach((conn) => {
+        let nodeA = conn.connectionProperties.nodeA;
+        let nodeB = conn.connectionProperties.nodeB;
+        let ports = conn.connectionProperties.ports;
+
+        let properties_nodeA = nodeA.nodeProperties;
+        let properties_nodeB = nodeB.nodeProperties;
+
+        let new_node_prop_a, new_node_prop_b;
+        let nodeA_exist = false, nodeB_exist = false;
+
+        if (temp_node_ids[properties_nodeA.id] == null) {
+            if (properties_nodeA.movement == null) {
+                new_node_prop_a = new Ixia(properties_nodeA.alias, properties_nodeA.location);
+            } else {
+                new_node_prop_a = new Dut(properties_nodeA.alias, properties_nodeA.location, properties_nodeA.movement);
+            }
+            temp_node_ids[properties_nodeA.id] = new Node(nodeA.label, nodeA.x, nodeA.y, nodeA.radius, nodeA.color, c);
+            temp_node_ids[properties_nodeA.id].NodeProperties = new_node_prop_a;
+        } else {
+            new_node_prop_a = temp_node_ids[properties_nodeA.id];
+            nodeA_exist = true;
+        }
+
+        if (temp_node_ids[properties_nodeB.id] == null) {
+            if (properties_nodeB.movement == null) {
+                new_node_prop_b = new Ixia(properties_nodeB.alias, properties_nodeB.location);
+            } else {
+                new_node_prop_b = new Dut(properties_nodeB .alias, properties_nodeB.location, properties_nodeB.movement);
+            }
+            temp_node_ids[properties_nodeB.id] = new Node(nodeB.label, nodeB.x, nodeB.y, nodeB.radius, nodeB.color, c);
+            temp_node_ids[properties_nodeB.id].NodeProperties = new_node_prop_b;
+        } else {
+            new_node_prop_b = temp_node_ids[properties_nodeB.id];
+            nodeB_exist = true;
+        }
+
+        if (nodeA_exist == false) {
+            Nodes.push(temp_node_ids[properties_nodeA.id]);
+        }
+
+        if (nodeB_exist == false) {
+            Nodes.push(temp_node_ids[properties_nodeB.id]);
+        }
+
+        let new_ports = [];
+        ports.forEach((port) => {
+            new_ports.push(new Port(port.identifierA, port.identifierB, port.speed));
+        }); 
+
+        let new_connection = new ConnectionHelper(temp_node_ids[properties_nodeA.id], temp_node_ids[properties_nodeB.id], c, new_ports);
+        Connections.push(new_connection);
+    });
+}
+
+function loadSavedYML(topology_name) {
+    let topology = savedTopologies[topology_name];
+
+    topology.nodes.forEach((node) => {
+        let nodeProp = new Dut(Object.keys(node)[0], "Lab", Dut.NO_MOVETO);
+        let nodeGui = new Node(
+            nodeProp.alias, 
+            500,
+            500,
+            20,
+            "Red",
+            c
+        );
+        console.log(nodeGui);
+        nodeGui.NodeProperties = nodeProp;
+        Nodes.push(nodeGui);
+    });
+
+    let signature = {};
+    topology.links.forEach((link) => {
+        let firstTempNode, secondTempNode;
+        let first = link.connection[0].split(/:/);
+        let second = link.connection[1].split(/:/);
+        let this_sig = `${first[0]}-${second[0]}`;
+
+        Nodes.forEach((node) => {
+            if (node.label == first[0]) {
+                firstTempNode = node;
+            } else if (node.label == second[0]) {
+                secondTempNode = node;
+            }
+        })
+
+        let port = new Port(first[1], second[1], "1G");
+
+        if (signature.hasOwnProperty(this_sig)) {
+            // connection already exist...
+            Connections[signature[this_sig]].connectionProperties.ports.push(port);
+        } else {
+            // create a connection...
+            let connectionTemp = new ConnectionHelper(firstTempNode, secondTempNode, c, [port]);
+            Connections.push(connectionTemp);
+            signature[this_sig] = Connections.length-1;
+        }
+    });
 }
 
 function saveTopologies() {
@@ -116,6 +240,43 @@ saveTopologyModal_closeIcon.addEventListener("click", () => {
     closeSaveTopologyModal();
 })
 
+uploadTopologyModal_closeButton.addEventListener("click", () => {
+    closeUploadTopologyModal();
+})
+
+uploadTopologyModal_closeIcon.addEventListener("click", () => {
+    closeUploadTopologyModal();
+})
+
+uploadTopologyModal_inputType.addEventListener("change", function () {
+    const index = this.selectedIndex;
+    const text = this.options[index].text;
+    switch(text) {
+        case "App Configured JSON": {
+            fileInputForTopology.accept = '.json';
+            uploadType = "json";
+        }
+        break;
+
+        case "Existing YAML": {
+            fileInputForTopology.accept = '.yml';
+            uploadType = "yml";
+        }
+        break;
+
+        case "Existing SysTest-LabRequest": {
+            fileInputForTopology.accept = '.text';
+            uploadType = "text";
+        }
+        break;
+
+        default: {
+            openAlertModal("Error!", `No such upload option : "${text}" available!`);
+        }
+        break;
+    }
+})
+
 saveTopologyModal_saveTopologyBtn.addEventListener("click", saveTopology);
 
 saveTopologyModal_saveAndDownloadBtn.addEventListener("click", () => {
@@ -173,84 +334,73 @@ document.getElementById("loadTopology").addEventListener("click", () => {
     Connections = [];
     Nodes = [];
 
-    // get the topology configuration JSON...
-    let topology = savedTopologies[topology_name];
-    let temp_node_ids = {};
+    if (savedTopologies[topology_name].hasOwnProperty("links")) {
+        loadSavedYML(topology_name);
+    } else if (savedTopologies[topology_name].hasOwnProperty("version")) {
+        loadSavedJSON(topology_name);
+    } else {
+        openAlertModal("Error!", "Unknown error occurred while loading topology!");
+    }
 
-    // loop through connections...
-    topology.connections.forEach((conn) => {
-        let nodeA = conn.connectionProperties.nodeA;
-        let nodeB = conn.connectionProperties.nodeB;
-        let ports = conn.connectionProperties.ports;
+    switch(uploadType) {
+        case "json": {
+            
+        } break;
 
-        let properties_nodeA = nodeA.nodeProperties;
-        let properties_nodeB = nodeB.nodeProperties;
+        case "yml": {
+            
+        } break;
 
-        let new_node_prop_a, new_node_prop_b;
-        let nodeA_exist = false, nodeB_exist = false;
-
-        if (temp_node_ids[properties_nodeA.id] == null) {
-            if (properties_nodeA.movement == null) {
-                new_node_prop_a = new Ixia(properties_nodeA.alias, properties_nodeA.location);
-            } else {
-                new_node_prop_a = new Dut(properties_nodeA.alias, properties_nodeA.location, properties_nodeA.movement);
-            }
-            temp_node_ids[properties_nodeA.id] = new Node(nodeA.label, nodeA.x, nodeA.y, nodeA.radius, nodeA.color, c);
-            temp_node_ids[properties_nodeA.id].NodeProperties = new_node_prop_a;
-        } else {
-            new_node_prop_a = temp_node_ids[properties_nodeA.id];
-            nodeA_exist = true;
-        }
-
-        if (temp_node_ids[properties_nodeB.id] == null) {
-            if (properties_nodeB.movement == null) {
-                new_node_prop_b = new Ixia(properties_nodeB.alias, properties_nodeB.location);
-            } else {
-                new_node_prop_b = new Dut(properties_nodeB .alias, properties_nodeB.location, properties_nodeB.movement);
-            }
-            temp_node_ids[properties_nodeB.id] = new Node(nodeB.label, nodeB.x, nodeB.y, nodeB.radius, nodeB.color, c);
-            temp_node_ids[properties_nodeB.id].NodeProperties = new_node_prop_b;
-        } else {
-            new_node_prop_b = temp_node_ids[properties_nodeB.id];
-            nodeB_exist = true;
-        }
-
-        if (nodeA_exist == false) {
-            Nodes.push(temp_node_ids[properties_nodeA.id]);
-        }
-
-        if (nodeB_exist == false) {
-            Nodes.push(temp_node_ids[properties_nodeB.id]);
-        }
-
-        let new_ports = [];
-        ports.forEach((port) => {
-            new_ports.push(new Port(port.identifierA, port.identifierB, port.speed));
-        }); 
-
-        let new_connection = new ConnectionHelper(temp_node_ids[properties_nodeA.id], temp_node_ids[properties_nodeB.id], c, new_ports);
-        Connections.push(new_connection);
-        
-    });
+        default: {
+            
+        } break;
+    }
 
     openAlertModal("Success", "Topology has been loaded!");
 });
 
 document.getElementById("uploadTopology").addEventListener("click", () => {
-    let fileInput = document.getElementById("fileInputForTopology");
-    fileInput.click();
-    
-    fileInput.addEventListener("change", function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
+    openUploadTopologyModal();
+});
 
-        reader.onload = function (e) {
-            const topology = JSON.parse(e.target.result);
+fileInputForTopology.addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        let topology, error = false;
+        switch(uploadType) {
+            case "json": {
+                topology = JSON.parse(e.target.result);
+            } break;
+
+            case "yml": {
+                topology = jsyaml.load(e.target.result);
+                if (topology.hasOwnProperty('links') == false) {
+                    openAlertModal("Error!", "Depricated YAML Format is not allowed to be uploaded!");
+                    error = true;
+                }
+            } break;
+
+            case "text": {
+                // TODO: Implement this
+            } break;
+
+            default: {
+                openAlertModal("Error!", "Unknown file type found while parsing!")
+            } break;
+        }
+        if (error == false) {
             savedTopologies[file.name] = topology;
             saveTopologies();
             loadSavedTopologies();
-        };
+            openAlertModal("Success!", "File has been uploaded!");
+        }
+    };
 
-        reader.readAsText(file);
-    });
+    reader.readAsText(file);
+});
+
+uploadTopologyModal_uploadTopology.addEventListener("click", () => {
+    fileInputForTopology.click();
 });
