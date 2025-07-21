@@ -38,7 +38,7 @@ Otherwise knowledge of `git` and `javascript` is enough.
 ### Installation
 
 1. **No Need to Install**
-    Just access it from this [URL](henilmistry.github.io/AristaLabRequestor/)
+    Just access it from this [URL](https://henilmistry.github.io/AristaLabRequestor/)
 
 2.  **Clone the repository:**
     ```bash
