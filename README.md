@@ -52,6 +52,33 @@ Otherwise knowledge of `git` and `javascript` is enough.
 
 ## 💡 Usage Guide
 
+### Tools Section
+There are few tools. As shown below in the image and those are described from left - to - right as follow:
+
+![screenshot](./docs/screenshots/tools.png)
+
+1. Node Tool
+    a. This can be used to create nodes on the canvas.
+    b. After creating nodes, it can be used to open Node Configuration Modal by double clicking on nodes.
+
+2. Connection Tool
+    a. This can be used to create connections of nodes.
+    b. Later, the connections can be modified from Node Configuration modal.
+
+3. Output Tool
+    a. This can be used to generate desired lab request format.
+    b. The lab request format can be selected from "Settings Tool" from within the "Topology Comfiguraion" Section.
+
+4. Settings Tool
+    a. This can be used to configure key bindings, topology settings and other useful stuff.
+    b. This can be used to manage saved topologies and load existing once.
+
+5. User Manual / Help Tool
+    a. This can be used to view Help Section for this App.
+
+6. Report an Issue / Issue Tool
+    a. This can be used to report and issue on GitHub.
+
 ### 1. Loading an ACT Lab YAML File
 
 ![Video](./docs/gifs/LoadYaml-gif.gif)
@@ -104,7 +131,7 @@ See Above for a video demo.
 
 ![Video](./docs/gifs/al-exploring-settings.gif)
 
-1.  Access the "Settings" tool for Tools Section.
+1.  Access the "Settings" tool from Tools Section.
 2.  You can configure Key Shortcuts for certain actions from "Key Bindings" section.
 3. You can choose the custom node images from "Canvas Utilities" section.
 4. You can manage saved topologies or load existing once using "Topology Configuration" section.
