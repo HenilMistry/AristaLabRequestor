@@ -55,7 +55,7 @@ Otherwise knowledge of `git` and `javascript` is enough.
 ### Tools Section
 There are few tools. As shown below in the image and those are described from left - to - right as follow:
 
-![screenshot](./docs/screenshots/tools.png)
+![screenshot](./docs/screenshot/tools.png)
 
 1. Node Tool
     a. This can be used to create nodes on the canvas.
