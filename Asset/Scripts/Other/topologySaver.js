@@ -119,48 +119,85 @@ function loadSavedJSON(topology_name) {
 function loadSavedYML(topology_name) {
     let topology = savedTopologies[topology_name];
 
+    let node_signature = {};
+    let port_signature = {};
+    let signature = {};
+
     topology.nodes.forEach((node) => {
         let nodeProp = new Dut(Object.keys(node)[0], "Lab", Dut.NO_MOVETO);
         let nodeGui = new Node(
             nodeProp.alias, 
-            500,
-            500,
+            Math.ceil(Math.random()*(window.innerWidth)),
+            Math.ceil(Math.random()*(window.innerHeight)),
             20,
             "Red",
             c
         );
-        console.log(nodeGui);
         nodeGui.NodeProperties = nodeProp;
         Nodes.push(nodeGui);
-    });
-
-    let signature = {};
-    topology.links.forEach((link) => {
-        let firstTempNode, secondTempNode;
-        let first = link.connection[0].split(/:/);
-        let second = link.connection[1].split(/:/);
-        let this_sig = `${first[0]}-${second[0]}`;
-
-        Nodes.forEach((node) => {
-            if (node.label == first[0]) {
-                firstTempNode = node;
-            } else if (node.label == second[0]) {
-                secondTempNode = node;
-            }
-        })
-
-        let port = new Port(first[1], second[1], "1G");
-
-        if (signature.hasOwnProperty(this_sig)) {
-            // connection already exist...
-            Connections[signature[this_sig]].connectionProperties.ports.push(port);
-        } else {
-            // create a connection...
-            let connectionTemp = new ConnectionHelper(firstTempNode, secondTempNode, c, [port]);
-            Connections.push(connectionTemp);
-            signature[this_sig] = Connections.length-1;
+        if (!topology.hasOwnProperty("links")) {
+            node_signature[nodeProp.alias] = Nodes.length-1;
         }
     });
+
+    if (topology.hasOwnProperty("links")) {
+        // updated version of YAML format is used...
+        topology.links.forEach((link) => {
+            let firstTempNode, secondTempNode;
+            let first = link.connection[0].split(/:/);
+            let second = link.connection[1].split(/:/);
+            let this_sig = `${first[0]}-${second[0]}`;
+
+            Nodes.forEach((node) => {
+                if (node.label == first[0]) {
+                    firstTempNode = node;
+                } else if (node.label == second[0]) {
+                    secondTempNode = node;
+                }
+            })
+
+            let port = new Port(first[1], second[1], "1G");
+
+            if (signature.hasOwnProperty(this_sig)) {
+                // connection already exist...
+                Connections[signature[this_sig]].connectionProperties.ports.push(port);
+            } else {
+                // create a connection...
+                let connectionTemp = new ConnectionHelper(firstTempNode, secondTempNode, c, [port]);
+                Connections.push(connectionTemp);
+                signature[this_sig] = Connections.length-1;
+            }
+        });
+    } else {
+        // Using depricated field "neighbors" under nodes...
+        // Loop through the nodes again...
+        topology.nodes.forEach((node) => {
+            if (node[Object.keys(node)[0]].hasOwnProperty("neighbors")) {
+                let firstTempNode, secondTempNode;
+                firstTempNode = Object.keys(node)[0];
+                
+                node[Object.keys(node)[0]].neighbors.forEach((neighbor) => {
+                    secondTempNode = neighbor.neighborDevice;
+                    let this_sig = `${firstTempNode}-${secondTempNode}`;
+
+                    let port = new Port(neighbor.port, neighbor.neighborPort, "1G");
+                    let port_sig = `${firstTempNode}:${neighbor.port}-${secondTempNode}:${neighbor.neighborPort}`;
+
+                    if (!(port_signature.hasOwnProperty(port_sig) || port_signature.hasOwnProperty(`${secondTempNode}:${neighbor.neighborPort}-${firstTempNode}:${neighbor.port}`))) {
+                        if (signature.hasOwnProperty(this_sig)) {
+                            Connections[signature[this_sig]].connectionProperties.ports.push(port);
+                        } else {
+                            let connectionTemp = new ConnectionHelper(Nodes[node_signature[firstTempNode]],  Nodes[node_signature[secondTempNode]], c, [port]);
+                            Connections.push(connectionTemp);
+                            signature[this_sig] = Connections.length-1;
+                        }
+                        port_signature[port_sig] = port;
+                        console.log(port_sig);
+                    }
+                });
+            }
+        });
+    }
 }
 
 function saveTopologies() {
@@ -259,7 +296,7 @@ uploadTopologyModal_inputType.addEventListener("change", function () {
         break;
 
         case "Existing YAML": {
-            fileInputForTopology.accept = '.yml';
+            fileInputForTopology.accept = '.yml .yaml';
             uploadType = "yml";
         }
         break;
@@ -334,26 +371,12 @@ document.getElementById("loadTopology").addEventListener("click", () => {
     Connections = [];
     Nodes = [];
 
-    if (savedTopologies[topology_name].hasOwnProperty("links")) {
+    if (savedTopologies[topology_name].hasOwnProperty("links") || savedTopologies[topology_name].hasOwnProperty("nodes")) {
         loadSavedYML(topology_name);
     } else if (savedTopologies[topology_name].hasOwnProperty("version")) {
         loadSavedJSON(topology_name);
     } else {
         openAlertModal("Error!", "Unknown error occurred while loading topology!");
-    }
-
-    switch(uploadType) {
-        case "json": {
-            
-        } break;
-
-        case "yml": {
-            
-        } break;
-
-        default: {
-            
-        } break;
     }
 
     openAlertModal("Success", "Topology has been loaded!");
@@ -376,10 +399,7 @@ fileInputForTopology.addEventListener("change", function(event) {
 
             case "yml": {
                 topology = jsyaml.load(e.target.result);
-                if (topology.hasOwnProperty('links') == false) {
-                    openAlertModal("Error!", "Depricated YAML Format is not allowed to be uploaded!");
-                    error = true;
-                }
+                console.log(topology);
             } break;
 
             case "text": {

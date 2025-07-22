@@ -46,7 +46,7 @@ function selectTool(name) {
                 selectedNode.select(false);
                 selectedNode = null;
             }
-            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Select some tool to start making Topology!';
+            label_info.innerHTML = '<img src="./Asset/Icons/info.png" alt="Information" width="30px"> Select some tool to start making Topology! Click on "?" Icon For Help.';
             break;
     }
 }

@@ -32,9 +32,11 @@ let selectedConnection = null;
 let NodeIxia, NodeDut;
 
 // For enabelling the dragging...
-let isDragging = false;
+let isDragging = false, isPanning = false;
 let draggableNode = null;
 let offsetX, offsetY;
+let originCanvasX = 0, originCanvasY = 0;
+let lastCanvasX = 0, lastCanvasY = 0;
 
 // something to be done initially, put here...
 function init() {
@@ -51,7 +53,10 @@ function init() {
 // Animation Loop
 function animationLoop() {
     requestAnimationFrame(animationLoop);
+    c.setTransform(1, 0, 0, 1, 0, 0);
     c.clearRect(0, 0, canvas.width, canvas.height);
+
+    c.setTransform(1, 0, 0, 1, originCanvasX, originCanvasY);
 
     Connections.forEach((conn) => {
         conn.update();
@@ -100,30 +105,52 @@ canvas.addEventListener("mousemove",(e)=>{
     if(isDragging && draggableNode) {
         draggableNode.x = mouse.x - offsetX;
         draggableNode.y = mouse.y - offsetY;
+    } else if (isPanning) {
+        const dx = e.offsetX - lastCanvasX;
+        const dy = e.offsetY - lastCanvasY;
+        originCanvasX += dx;
+        originCanvasY += dy;
+        lastCanvasX = e.offsetX;
+        lastCanvasY = e.offsetY;
     }
 });
 
 // Detect mousedown on an Node...
 canvas.addEventListener("mousedown", (e) => {
     // find the object from all Nodes...
+    const transform = c.getTransform().invertSelf();
+    const point = new DOMPoint(mouse.x, mouse.y).matrixTransform(transform);
     draggableNode = Nodes.find(node => 
-        distance(node.x, node.y, mouse.x, mouse.y) <= node.radius
+        distance(node.x, node.y, point.x, point.y) <= node.radius
     );
 
     // if there exists draggable node...
     if(draggableNode) {
         // calculate the offset...
         isDragging = true;
+        isPanning = false;
         offsetX = mouse.x - draggableNode.x;
         offsetY = mouse.y - draggableNode.y;
+    } else {
+        isPanning = true;
+        isDragging = false;
+        lastCanvasX = e.offsetX;
+        lastCanvasY = e.offsetY;
     }
 });
 
 // Detect mouseup to stop the dragging...
 canvas.addEventListener("mouseup", (e) => {
     isDragging = false;
+    isPanning = false;
     draggableNode = null;
 });
+
+canvas.addEventListener("mouseleave", (e) => {
+    isDragging = false;
+    isPanning = false;
+    draggableNode = null;
+})
   
 // What to do when mouse is clicked...
 canvas.addEventListener("click",(e) => {
